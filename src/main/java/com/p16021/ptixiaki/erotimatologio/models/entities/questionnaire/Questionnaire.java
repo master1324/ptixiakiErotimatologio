@@ -6,6 +6,8 @@ import com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +18,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter@Setter
 public class Questionnaire {
-
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -31,6 +32,12 @@ public class Questionnaire {
     @OneToMany(mappedBy = "questionnaire",cascade = CascadeType.ALL)
     @JsonManagedReference(value = "questionGroups")
     private List<QuestionGroup> questionnaire;
+
+    //TODO : kane costum validator gia tin singrisi
+    @Min(1)@Max(12)
+    private int fromMonth;
+    @Min(1)@Max(12)
+    private int toMonth;
 
     @Transient
     private Map<IdentifierType,List<Identifier>> eligibleResponsesIdentifiers;
