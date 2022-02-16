@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form th:object="${quest}">
+
+    <table th:each=" qtype : ${quest.quest} ">
+                <thead>
+                    <tr>
+                        <th>xd</th>
+                        <th th:each=" type : ${qtype.key}" th:text="${type}"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each=" question: ${qtype.value}">
+                        <td th:text="${question}"></td>
+                        <td>
+                            <input th:each=" type : ${qtype.key}" type="checkbox" value = " "> </input>
+                        </td>
+                    </tr>
+                </tbody>
+    </table>
+</form>
+
+</body>
+</html>
