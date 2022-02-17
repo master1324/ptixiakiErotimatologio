@@ -24,6 +24,8 @@ public class Questionnaire {
     private Long id;
     @NotEmpty(message = "Name cant be empty")
     private String name;
+    private String shortDescription;
+    private Boolean enabled;
 
     @ElementCollection()
     @Enumerated
@@ -35,9 +37,9 @@ public class Questionnaire {
 
     //TODO : kane costum validator gia tin singrisi
     @Min(1)@Max(12)
-    private int fromMonth;
+    private Integer fromMonth;
     @Min(1)@Max(12)
-    private int toMonth;
+    private Integer toMonth;
 
     @Transient
     private Map<IdentifierType,List<Identifier>> eligibleResponsesIdentifiers;

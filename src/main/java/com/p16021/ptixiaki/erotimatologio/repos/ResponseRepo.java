@@ -3,6 +3,7 @@ package com.p16021.ptixiaki.erotimatologio.repos;
 
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Response;
 import com.p16021.ptixiaki.erotimatologio.models.projections.ResponseView;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -17,4 +18,10 @@ public interface ResponseRepo extends CrudRepository<Response,Long> {
     List<ResponseView> findAllByUserId(long id);
     ResponseView findProjectedById(long id);
     Iterable<ResponseView> findAllByQuestionIdAndFilter(long id, String filter);
+
+    @Query(value = "SELECT questionnaire.id from questionnaire " +
+            "INNER join question_group on questionnaire.id = question_group.questionnaire_id " +
+            "INNER JOIN question on question.question_group_id = question_group.id " +
+            "INNER JOIN response on response.question_id = question.id where response.id =?1",nativeQuery = true)
+    long findQuestionnaireByResponseId(long responseId);
 }

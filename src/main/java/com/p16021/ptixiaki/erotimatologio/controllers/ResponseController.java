@@ -54,6 +54,7 @@ public class ResponseController {
         return ResponseEntity.ok().body(responseViews);
     }
 
+    @GetMapping("/all_quest_responses")
     public ResponseEntity<Iterable<QuestionnaireResponse>> getAllQuestionnaireResponses(){
 
         Long userId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -78,16 +79,6 @@ public class ResponseController {
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
 
         responseService.saveAll(response,userId);
-
-        if (response.iterator().hasNext()){
-            Response r = response.iterator().next();
-            Iterable<QuestionnaireView> q = questionnaireService.findByQuestionId(r.getQuestion().getId());
-            if (q.iterator().hasNext()){
-
-                responseService.saveQuestionnaireResponse(new QuestionnaireResponse(q.iterator().next().getId(),userId,r.getFilter()));
-            }
-
-        }
 
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("response/add").toUriString());
         return ResponseEntity.created(uri).build();

@@ -7,6 +7,7 @@ import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
 import com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType;
 import com.p16021.ptixiaki.erotimatologio.models.projections.ResponseView;
 import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.QuestionnaireBody;
+import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.QuestionnaireView;
 import com.p16021.ptixiaki.erotimatologio.repos.QuestionnaireResponseRepo;
 import com.p16021.ptixiaki.erotimatologio.repos.ResponseRepo;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,8 @@ public class ResponseService {
 
     private final ResponseRepo responseRepo;
     private final QuestionnaireResponseRepo questionnaireResponseRepo;
-    private final IdentifierService identifierService;
-    private final QuestionService questionService;
+    private final ResponseValidator responseValidator;
+
 
     public ResponseView getResponse(long id) {
         return responseRepo.findProjectedById(id);
@@ -61,23 +62,30 @@ public class ResponseService {
 
     public void saveAll(Iterable<Response> responses,long userId){
 
-        if(responses!= null) {
+        if(responses !=null) {
+            Response rx = responses.iterator().next();
             for (Response r : responses) {
-                boolean isOk = responseIsOk(r);
+                boolean isOk = responseValidator.responseIsOk(r);
                 if (!isOk) {
                     throw new RuntimeException("I apantisi " + r.getResponse() + " me id " + r.getId() + " den einai apodekti");
                 }
                 r.setUserId(userId);
             }
             responseRepo.saveAll(responses);
+            long qid = responseRepo.findQuestionnaireByResponseId(rx.getId());
+            saveQuestionnaireResponse(rx.getFilter(),userId,qid);
         }else{
             throw new RuntimeException("Den uparxoun apantises");
         }
     }
 
-    public  void saveQuestionnaireResponse(QuestionnaireResponse qr){
+    //TODO: CHeck if creating new obj every time is nessesary
+    private void saveQuestionnaireResponse(String filter,Long userId,Long questionnaireId){
         Optional<QuestionnaireResponse> optQr = questionnaireResponseRepo.
-                findByFilterAndQuestionnaireIdAndUserId(qr.getFilter(),qr.getQuestionnaireId(),qr.getUserId());
+                findByFilterAndQuestionnaireIdAndUserId(filter,questionnaireId,userId);
+
+        QuestionnaireResponse qr = new QuestionnaireResponse(questionnaireId,userId,filter);
+
         optQr.ifPresent(questionnaireResponse -> qr.setId(questionnaireResponse.getId()));
         questionnaireResponseRepo.save(qr);
     }
@@ -86,19 +94,24 @@ public class ResponseService {
     }
 
     //TODO : CHECK FILTER VALIDITY
-    private boolean responseIsOk(Response response){
-        long qid = response.getQuestion().getId();
-        ResponseType responseType = questionService.findQuestionResponseType(qid);
-        if(responseType!=null){
-            if(!responseType.equals(ResponseType.TEXT)) {
-                List<String> eligibleResponses = identifierService.findEligibleResponses(responseType);
-                return eligibleResponses.stream().anyMatch(s -> s.equals(response.getResponse()));
-            }else{
-                return true;
-            }
-        }else{
-            throw new RuntimeException("Oi apantiseis den einai ok");
-        }
+//    private boolean responseIsOk(Response response){
+//        long qid = response.getQuestion().getId();
+//        ResponseType responseType = questionService.findQuestionResponseType(qid);
+//        if(responseType!=null){
+//            if(!responseType.equals(ResponseType.TEXT)) {
+//                List<String> eligibleResponses = identifierService.findEligibleResponses(responseType);
+//                return eligibleResponses.stream().anyMatch(s -> s.equals(response.getResponse()));
+//            }else{
+//                return true;
+//            }
+//        }else{
+//            throw new RuntimeException("Oi apantiseis den einai ok");
+//        }
+//    }
+
+    private boolean filterIsOk(){
+
+        return true;
     }
 
     private Map<IdentifierType,String> decodeFilter(String filter){
