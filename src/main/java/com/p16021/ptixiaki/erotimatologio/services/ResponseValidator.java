@@ -35,10 +35,4 @@ public class ResponseValidator {
         }
     }
 
-    private boolean responseBelongsToSameQuestionnaire(long questionnaireId,Response response){
-        return responseRepo.findQuestionnaireByResponseId(response.getId()) == questionnaireId;
-    }
-
-
-
 }

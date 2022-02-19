@@ -57,7 +57,7 @@ public class ResponseController {
     @GetMapping("/all_quest_responses")
     public ResponseEntity<Iterable<QuestionnaireResponse>> getAllQuestionnaireResponses(){
 
-        Long userId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
 
         Iterable<QuestionnaireResponse> responses = responseService.findAllQuestResponsesByUser(userId);
         return ResponseEntity.ok().body(responses);

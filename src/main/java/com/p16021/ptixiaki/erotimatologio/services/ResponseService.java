@@ -117,36 +117,7 @@ public class ResponseService {
     public void deleteById(long rid) {
     }
 
-    //TODO : CHECK FILTER VALIDITY
-//    private boolean responseIsOk(Response response){
-//        long qid = response.getQuestion().getId();
-//        ResponseType responseType = questionService.findQuestionResponseType(qid);
-//        if(responseType!=null){
-//            if(!responseType.equals(ResponseType.TEXT)) {
-//                List<String> eligibleResponses = identifierService.findEligibleResponses(responseType);
-//                return eligibleResponses.stream().anyMatch(s -> s.equals(response.getResponse()));
-//            }else{
-//                return true;
-//            }
-//        }else{
-//            throw new RuntimeException("Oi apantiseis den einai ok");
-//        }
-//    }
 
-    private boolean filterIsOk(){
 
-        return true;
-    }
 
-    private Map<IdentifierType,String> decodeFilter(String filter){
-
-        Map<IdentifierType,String> decodedFilter = new HashMap<>();
-
-        List<String> items = Arrays.asList(filter.split("\\s*,\\s*"));
-
-        String filterMinusYear = StringUtils.substring(filter, 4);
-        decodedFilter.put(YEAR,StringUtils.substring(filter, 0, 3) );
-
-        return null;
-    }
 }

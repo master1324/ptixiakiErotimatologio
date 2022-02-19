@@ -15,6 +15,8 @@ import java.time.Month;
 import java.time.Year;
 import java.util.*;
 
+import static com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType.YEAR;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -35,9 +37,8 @@ public class FilterService {
     public Map<IdentifierType,String> decodeFilter(String filter){
         Map<IdentifierType,String> decodedFilter = new HashMap<>();
         List<String> items = Arrays.asList(filter.split("\\s*,\\s*"));
-
+        decodedFilter.put(YEAR,items.get(0));
         items.forEach( item ->{
-
             Optional<Identifier> identifier = identifierRepo.findById(Long.parseLong(item));
             identifier.ifPresent(value -> decodedFilter.put(value.getType(), value.getName()));
         });
@@ -45,4 +46,8 @@ public class FilterService {
         return decodedFilter;
     }
 
+    public String produceFilter(){
+
+        return "";
+    }
 }
