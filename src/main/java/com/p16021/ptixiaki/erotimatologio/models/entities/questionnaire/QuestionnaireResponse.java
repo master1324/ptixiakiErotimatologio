@@ -22,13 +22,15 @@ public class QuestionnaireResponse {
     private Long questionnaireId;
     private Long userId;
     private String filter;
+    private String name;
 
     @Transient
     private Map<IdentifierType,String> decodedFilter;
 
-    public QuestionnaireResponse(Long questionnaireId, Long userId, String filter) {
+    public QuestionnaireResponse(Long questionnaireId, Long userId, String filter,String name) {
         this.questionnaireId = questionnaireId;
         this.userId = userId;
         this.filter = filter;
+        this.name=name;
     }
 }
