@@ -20,7 +20,7 @@ public class ResponseValidator {
     private final ResponseRepo responseRepo;
     private final QuestionnaireRepo questionnaireRepo;
 
-    public boolean responseIsOk(Response response){
+    public boolean isOk(Response response){
         long qid = response.getQuestion().getId();
         ResponseType responseType = questionService.findQuestionResponseType(qid);
         if(responseType!=null){
@@ -39,11 +39,6 @@ public class ResponseValidator {
         return responseRepo.findQuestionnaireByResponseId(response.getId()) == questionnaireId;
     }
 
-    public boolean filterIsOk(){
 
-
-
-        return true;
-    }
 
 }

@@ -25,6 +25,8 @@ public class ResponseService {
     private final ResponseRepo responseRepo;
     private final QuestionnaireResponseRepo questionnaireResponseRepo;
     private final ResponseValidator responseValidator;
+    private final FilterService filterService;
+
 
 
     public ResponseView getResponse(long id) {
@@ -46,9 +48,9 @@ public class ResponseService {
     public Iterable<QuestionnaireResponse> findAllQuestResponsesByUser(long userId){
         Iterable<QuestionnaireResponse> qResponses = questionnaireResponseRepo.findByUserId(userId);
 
-        qResponses.forEach(qresponse -> qresponse.setDecodedFilter(decodeFilter(qresponse.getFilter())));
+        qResponses.forEach(qResponse -> qResponse.setDecodedFilter(filterService.decodeFilter(qResponse.getFilter())));
 
-        return questionnaireResponseRepo.findByUserId(userId);
+        return qResponses;
     }
 
     public void save(Response response, Long userId) {
@@ -62,17 +64,39 @@ public class ResponseService {
 
     public void saveAll(Iterable<Response> responses,long userId){
 
-        if(responses !=null) {
+        if(responses.iterator().hasNext()) {
             Response rx = responses.iterator().next();
-            for (Response r : responses) {
-                boolean isOk = responseValidator.responseIsOk(r);
-                if (!isOk) {
-                    throw new RuntimeException("I apantisi " + r.getResponse() + " me id " + r.getId() + " den einai apodekti");
-                }
-                r.setUserId(userId);
-            }
-            responseRepo.saveAll(responses);
+            String filter = rx.getFilter();
             long qid = responseRepo.findQuestionnaireByResponseId(rx.getId());
+            List<Long> questionIds = responseRepo.findQuestionsOfQuestionnaire(qid);
+
+            //AN TO FILTER DEN EXEI LIKSEI
+            if (filterService.isOk(filter,qid)){
+                for (Response r : responses) {
+                    //AN I EROTISI YPARXEI SE AUTO TO EPOTIMATOLOGIO
+                    if(questionIds.stream().anyMatch(id-> r.getQuestion().getId().equals(id))){
+                        if(r.getFilter().equals(filter)){
+                            //AN I APANTISI EINAI APODEKTI BASI TON TIPO EROTISIS
+                            if (!responseValidator.isOk(r)){
+                                throw new RuntimeException("I apantisi " + r.getResponse() + " me id " + r.getId() + " den einai apodekti");
+                            }
+                            r.setUserId(userId);
+                        }else {
+                            throw new RuntimeException("MH APODEKTA FILTER");
+                        }
+                    }else{
+                        throw new RuntimeException("I EROTISI DEN YPAXEI SE AUTO TO EROTIMATOLOGIO");
+                    }
+
+                    //AN KATHE APANTISEI EXEI TO IDIO FILTER
+
+                }
+            }else{
+                throw new RuntimeException("TO EROTIMATOLOGIO DEN DEXETE PIA APANTISEIS");
+            }
+
+            responseRepo.saveAll(responses);
+
             saveQuestionnaireResponse(rx.getFilter(),userId,qid);
         }else{
             throw new RuntimeException("Den uparxoun apantises");

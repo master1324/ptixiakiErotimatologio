@@ -19,6 +19,11 @@ public interface ResponseRepo extends CrudRepository<Response,Long> {
     ResponseView findProjectedById(long id);
     Iterable<ResponseView> findAllByQuestionIdAndFilter(long id, String filter);
 
+    @Query(value = "SELECT question.id from question " +
+            "inner join question_group on question.question_group_id = question_group.id " +
+            "INNER JOIN questionnaire on questionnaire.id = question_group.questionnaire_id where questionnaire.id =?1",nativeQuery = true)
+    List<Long> findQuestionsOfQuestionnaire(long qid);
+
     @Query(value = "SELECT questionnaire.id from questionnaire " +
             "INNER join question_group on questionnaire.id = question_group.questionnaire_id " +
             "INNER JOIN question on question.question_group_id = question_group.id " +
