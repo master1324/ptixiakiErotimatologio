@@ -1,14 +1,13 @@
 package com.p16021.ptixiaki.erotimatologio.controllers;
 
 
-import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Identifier;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Questionnaire;
 import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.QuestionnaireIdentifiers;
 import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.QuestionnaireBody;
 import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.QuestionnaireView;
 import com.p16021.ptixiaki.erotimatologio.models.projections.result.QuestionnaireResult;
 
-import com.p16021.ptixiaki.erotimatologio.services.QuestionnaireService;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.QuestionnaireService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +19,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 import java.net.URI;
-import java.util.*;
 
 @RestController
 @RequestMapping("/quest")
@@ -62,12 +60,12 @@ public class QuestionnaireController {
     @GetMapping("/{qid}/results")
     public ResponseEntity<QuestionnaireResult> getResults(@PathVariable long qid, @RequestParam String filter){
 
-//        try {
+        try {
             QuestionnaireResult q = questionnaireService.findResult(qid,filter);
             return ResponseEntity.ok().body(q);
-//        }catch (RuntimeException e){
-//            return ResponseEntity.notFound().build();
-//        }
+        }catch (RuntimeException e){
+            return ResponseEntity.notFound().build();
+        }
 
     }
 
@@ -87,7 +85,7 @@ public class QuestionnaireController {
 
     @DeleteMapping("/{qid}")
     public void deleteQuest(@PathVariable long qid){
-      questionnaireService.deleteById(qid);
+      //questionnaireService.deleteById(qid);
    }
 
 

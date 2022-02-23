@@ -2,16 +2,13 @@ package com.p16021.ptixiaki.erotimatologio.controllers;
 
 
 
-import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Questionnaire;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.QuestionnaireResponse;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Response;
 
 import com.p16021.ptixiaki.erotimatologio.models.projections.ResponseView;
-import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.QuestionnaireView;
-import com.p16021.ptixiaki.erotimatologio.repos.QuestionnaireRepo;
 import com.p16021.ptixiaki.erotimatologio.repos.ResponseRepo;
-import com.p16021.ptixiaki.erotimatologio.services.QuestionnaireService;
-import com.p16021.ptixiaki.erotimatologio.services.ResponseService;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.QuestionnaireService;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.ResponseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

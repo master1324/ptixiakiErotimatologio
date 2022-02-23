@@ -3,25 +3,22 @@ package com.p16021.ptixiaki.erotimatologio.services;
 
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.QuestionnaireResponse;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Response;
-import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
-import com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType;
 import com.p16021.ptixiaki.erotimatologio.models.projections.ResponseView;
 import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.QuestionnaireBody;
 import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.QuestionnaireView;
 import com.p16021.ptixiaki.erotimatologio.repos.QuestionnaireRepo;
 import com.p16021.ptixiaki.erotimatologio.repos.QuestionnaireResponseRepo;
 import com.p16021.ptixiaki.erotimatologio.repos.ResponseRepo;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.FilterService;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.ResponseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.util.StringUtils;
 
 import java.util.*;
 
-import static com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType.YEAR;
-
 @Service @RequiredArgsConstructor @Slf4j
-public class ResponseService {
+public class ResponseServiceImpl implements  ResponseService {
 
     private final ResponseRepo responseRepo;
     private final QuestionnaireRepo questionnaireRepo;
@@ -31,10 +28,12 @@ public class ResponseService {
 
 
 
+    @Override
     public ResponseView getResponse(long id) {
         return responseRepo.findProjectedById(id);
     }
 
+    @Override
     public List<ResponseView> findAllUserResponsesByFilter(QuestionnaireBody q, Long userId, Long qid, String filter) {
 
         Set<Long> qIds = new HashSet<>();
@@ -47,6 +46,7 @@ public class ResponseService {
         return responseRepo.findAllProjectedByUserIdAndFilterAndQuestionIdIn(userId,filter,qIds);
     }
 
+    @Override
     public Iterable<QuestionnaireResponse> findAllQuestResponsesByUser(long userId){
         Iterable<QuestionnaireResponse> qResponses = questionnaireResponseRepo.findByUserId(userId);
 
@@ -55,6 +55,7 @@ public class ResponseService {
         return qResponses;
     }
 
+    @Override
     public void save(Response response, Long userId) {
 
         //if(responseIsOk(response)){
@@ -64,7 +65,8 @@ public class ResponseService {
             //throw new RuntimeException("response is not eligible");
     }
 
-    public void saveAll(Iterable<Response> responses,long userId){
+    @Override
+    public void saveAll(Iterable<Response> responses, long userId){
 
         if(responses.iterator().hasNext()) {
             Response rx = responses.iterator().next();
@@ -121,6 +123,7 @@ public class ResponseService {
         questionnaireResponseRepo.save(qr);
     }
 
+    @Override
     public void deleteById(long rid) {
     }
 

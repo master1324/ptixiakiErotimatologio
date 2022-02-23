@@ -2,9 +2,8 @@ package com.p16021.ptixiaki.erotimatologio.services;
 
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Response;
 import com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType;
-import com.p16021.ptixiaki.erotimatologio.repos.QuestionRepo;
-import com.p16021.ptixiaki.erotimatologio.repos.QuestionnaireRepo;
-import com.p16021.ptixiaki.erotimatologio.repos.ResponseRepo;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.IdentifierService;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.QuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,8 +16,6 @@ public class ResponseValidator {
 
     private final IdentifierService identifierService;
     private final QuestionService questionService;
-    private final ResponseRepo responseRepo;
-    private final QuestionnaireRepo questionnaireRepo;
 
     public boolean isOk(Response response){
         long qid = response.getQuestion().getId();

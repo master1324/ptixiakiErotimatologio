@@ -4,6 +4,7 @@ import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Identifi
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
 import com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType;
 import com.p16021.ptixiaki.erotimatologio.repos.IdentifierRepo;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.IdentifierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,16 +17,18 @@ import static com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType.EXA
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class IdentifierService {
+public class IdentifierServiceImpl implements IdentifierService {
 
     private final IdentifierRepo identifierRepo;
 
+    @Override
     public Identifier findById(long id){
         Optional<Identifier> optional = identifierRepo.findById(id);
         assert optional.isPresent();
         return optional.get();
     }
 
+    @Override
     public Map<IdentifierType,List<Identifier>> findAll(){
 
         Map<IdentifierType,List<Identifier>> identifierMap = new HashMap<>();
@@ -42,6 +45,7 @@ public class IdentifierService {
         return identifierMap;
     }
 
+    @Override
     public List<String> findEligibleResponses(ResponseType responseType){
         List<String> eligibleResponses = new ArrayList<>();
 
@@ -58,6 +62,7 @@ public class IdentifierService {
         return eligibleResponses;
     }
 
+    @Override
     public List<Identifier> findByIdentifierType(IdentifierType identifierType){
         List<Identifier> identifiers = new ArrayList<>();
         switch (identifierType){

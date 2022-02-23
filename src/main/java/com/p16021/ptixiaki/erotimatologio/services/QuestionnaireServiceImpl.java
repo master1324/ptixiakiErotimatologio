@@ -2,7 +2,6 @@ package com.p16021.ptixiaki.erotimatologio.services;
 
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Identifier;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Questionnaire;
-import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.QuestionnaireResponse;
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
 import com.p16021.ptixiaki.erotimatologio.models.projections.QuestGroupView;
 import com.p16021.ptixiaki.erotimatologio.models.projections.QuestionView;
@@ -14,7 +13,9 @@ import com.p16021.ptixiaki.erotimatologio.models.projections.result.QuestGroupRe
 import com.p16021.ptixiaki.erotimatologio.models.projections.result.QuestionResultView;
 import com.p16021.ptixiaki.erotimatologio.models.projections.result.QuestionnaireResult;
 import com.p16021.ptixiaki.erotimatologio.repos.QuestionnaireRepo;
-import com.p16021.ptixiaki.erotimatologio.repos.QuestionnaireResponseRepo;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.IdentifierService;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.QuestionService;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.QuestionnaireService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,19 +23,21 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service @RequiredArgsConstructor @Slf4j
-public class QuestionnaireService {
+public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     private final QuestionnaireRepo questionnaireRepo;
 
-    private final ResponseService responseService;
+    private final ResponseServiceImpl responseService;
     private final QuestionService questionService;
     private final IdentifierService identifierService;
 
+    @Override
     public Iterable<QuestionnaireView> findAll(){
 
         return questionnaireRepo.findProjectedBy();
     }
 
+    @Override
     public QuestionnaireIdentifiers findById(long id){
 
         QuestionnaireIdentifiers questionnaire = questionnaireRepo.findProjectedById(id,QuestionnaireIdentifiers.class);
@@ -51,6 +54,7 @@ public class QuestionnaireService {
 
     }
 
+    @Override
     public QuestionnaireBody findByIdWhereUser(long qid, long userId, String filter){
 
         QuestionnaireBody questionnaire = questionnaireRepo.findProjectedById(qid, QuestionnaireBody.class);
@@ -86,6 +90,7 @@ public class QuestionnaireService {
 
     }
 
+    @Override
     public QuestionnaireResult findResult(long id, String filter){
 
         QuestionnaireResult questionnaireResultView = questionnaireRepo.findProjectedById(id, QuestionnaireResult.class);
@@ -104,23 +109,11 @@ public class QuestionnaireService {
 
     }
 
-    public Iterable<QuestionnaireView> findByQuestionId(long qid){
-        return questionnaireRepo.findByQuestionnaireQuestionsResponsesQuestionId(qid);
-    }
-
+    @Override
     public void save(Questionnaire q){
 
         questionnaireRepo.save(q);
 
-    }
-
-    public void deleteById(long qid) {
-    }
-
-    private String produceFilter(Set<Identifier> identifiers){
-        Set<String> ids = new HashSet<>();
-        identifiers.forEach(i->ids.add(String.valueOf(i.getId())));
-        return String.join("",ids);
     }
 
 
