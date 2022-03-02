@@ -68,49 +68,60 @@ public class ResponseServiceImpl implements  ResponseService {
     @Override
     public void saveAll(Iterable<Response> responses, long userId){
 
-        if(responses.iterator().hasNext()) {
-            Response rx = responses.iterator().next();
-            String filter = rx.getFilter();
-            Optional<QuestionnaireView> qv = questionnaireRepo.findQuestionnaireByResponseId(rx.getId());
-            //long qid = responseRepo.findQuestionnaireByResponseId(rx.getId());
+//        if(responses.iterator().hasNext()) {
+//            Response rx = responses.iterator().next();
+//            String filter = rx.getFilter();
+//            //TODO : DEN DOULEVEI OTAN DEN YPARXOUN APANTISEIS AKOMA
+//            log.info(String.valueOf(rx.getQuestion().getId()) + "XXXXXXXXXXXXXXXXXXXXXXXXX");
+//            QuestionnaireView qv = questionnaireRepo.findQuestionnaireByQuestionId(rx.getQuestion().getId());
+//            //long qid = responseRepo.findQuestionnaireByResponseId(rx.getId());
+//
+//
+//            if(qv.isPresent()){
+//                List<Long> questionIds = responseRepo.findQuestionsOfQuestionnaire(qv.get().getId());
+//                //AN TO FILTER DEN EXEI LIKSEI
+//                if (filterService.filterIsOk(filter,qv.get().getId())){
+//                    for (Response r : responses) {
+//                        //AN I EROTISI YPARXEI SE AUTO TO EPOTIMATOLOGIO
+//                        if(questionIds.stream().anyMatch(id-> r.getQuestion().getId().equals(id))){
+//                            if(r.getFilter().equals(filter)){
+//                                //AN I APANTISI EINAI APODEKTI BASI TON TIPO EROTISIS
+//                                if (!responseValidator.responseIsOk(r)){
+//                                    throw new RuntimeException("I apantisi " + r.getResponse() + " me id " + r.getId() + " den einai apodekti");
+//                                }
+//                                r.setUserId(userId);
+//                            }else {
+//                                throw new RuntimeException("MH APODEKTA FILTER");
+//                            }
+//                        }else{
+//                            throw new RuntimeException("I EROTISI DEN YPAXEI SE AUTO TO EROTIMATOLOGIO");
+//                        }
+//                        //AN KATHE APANTISEI EXEI TO IDIO FILTER
+//                    }
+//                }else{
+//                    throw new RuntimeException("TO EROTIMATOLOGIO DEN DEXETE PIA APANTISEIS");
+//                }
+//
+//                responseRepo.saveAll(responses);
+//
+//                saveQuestionnaireResponse(rx.getFilter(),userId,qv.get().getId(),qv.get().getName());
+//            }else{
+//                throw new RuntimeException("TO EROTIMATOLOGIO DEN YPARXEI");
+//            }
+//
+//        }else{
+//            throw new RuntimeException("Den uparxoun apantises");
+//        }\
 
+        Response rx = responses.iterator().next();
+        QuestionnaireView qv = questionnaireRepo.findQuestionnaireByQuestionId(rx.getQuestion().getId());
 
-            if(qv.isPresent()){
-                List<Long> questionIds = responseRepo.findQuestionsOfQuestionnaire(qv.get().getId());
-                //AN TO FILTER DEN EXEI LIKSEI
-                if (filterService.isOk(filter,qv.get().getId())){
-                    for (Response r : responses) {
-                        //AN I EROTISI YPARXEI SE AUTO TO EPOTIMATOLOGIO
-                        if(questionIds.stream().anyMatch(id-> r.getQuestion().getId().equals(id))){
-                            if(r.getFilter().equals(filter)){
-                                //AN I APANTISI EINAI APODEKTI BASI TON TIPO EROTISIS
-                                if (!responseValidator.isOk(r)){
-                                    throw new RuntimeException("I apantisi " + r.getResponse() + " me id " + r.getId() + " den einai apodekti");
-                                }
-                                r.setUserId(userId);
-                            }else {
-                                throw new RuntimeException("MH APODEKTA FILTER");
-                            }
-                        }else{
-                            throw new RuntimeException("I EROTISI DEN YPAXEI SE AUTO TO EROTIMATOLOGIO");
-                        }
-                        //AN KATHE APANTISEI EXEI TO IDIO FILTER
-                    }
-                }else{
-                    throw new RuntimeException("TO EROTIMATOLOGIO DEN DEXETE PIA APANTISEIS");
-                }
+        responseValidator.responsesAreOk(responses,userId,qv.getId());
+        responseRepo.saveAll(responses);
+        saveQuestionnaireResponse(rx.getFilter(),userId,qv.getId(),qv.getName());
 
-                responseRepo.saveAll(responses);
-
-                saveQuestionnaireResponse(rx.getFilter(),userId,qv.get().getId(),qv.get().getName());
-            }else{
-                throw new RuntimeException("TO EROTIMATOLOGIO DEN YPARXEI");
-            }
-
-        }else{
-            throw new RuntimeException("Den uparxoun apantises");
-        }
     }
+
 
     //TODO: CHeck if creating new obj every time is nessesary
     private void saveQuestionnaireResponse(String filter,Long userId,Long questionnaireId,String name){

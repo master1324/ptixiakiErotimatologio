@@ -75,7 +75,11 @@ public class ResponseController {
     public ResponseEntity<Response> sendResponses(@RequestBody Iterable<Response> response) {
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
 
-        responseService.saveAll(response,userId);
+        try {
+            responseService.saveAll(response,userId);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
 
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("response/add").toUriString());
         return ResponseEntity.created(uri).build();

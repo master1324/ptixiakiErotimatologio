@@ -24,13 +24,19 @@ public class FilterServiceImpl implements FilterService {
     private final QuestionnaireRepo questionnaireRepo;
 
     @Override
-    public boolean isOk(String filter, Long qid){
-        QuestionnaireValidators questionnaireValidators = questionnaireRepo.findProjectedById(qid,QuestionnaireValidators.class);
+    public boolean filterIsOk(String filter, Long qid){
+        //QuestionnaireValidators questionnaireValidators = questionnaireRepo.findProjectedById(qid,QuestionnaireValidators.class);
         int year = Year.now().getValue();
 
         String[] filterArray= filter.split(",");
 
-        return filterArray[0].equals(String.valueOf(year));
+        if (filterArray[0].equals(String.valueOf(year))){
+            return true;
+        }else{
+            throw new RuntimeException("Mi apodekto filter");
+        }
+
+
     }
 
     @Override
