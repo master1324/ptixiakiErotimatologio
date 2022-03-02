@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.AppUser;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.RegistrationRequest;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.Role;
+import com.p16021.ptixiaki.erotimatologio.services.RegistrationService;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -20,10 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +39,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RestController @RequiredArgsConstructor @Slf4j
 public class UserController {
 
+    private final RegistrationService registrationService;
     private final UserService userService;
 
     @GetMapping("/is_admin")
@@ -68,9 +67,14 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<RegistrationRequest> registerUser(@RequestBody RegistrationRequest request){
+    public ResponseEntity<String> registerUser(@RequestBody RegistrationRequest request){
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/user/signup").toUriString());
-        return ResponseEntity.created(uri).body(userService.register(request));
+        return ResponseEntity.created(uri).body(registrationService.register(request));
+    }
+
+    @GetMapping
+    public String confirm(@RequestParam("token") String token){
+        return registrationService.confirmToken(token);
     }
 
     @PostMapping("/refresh")

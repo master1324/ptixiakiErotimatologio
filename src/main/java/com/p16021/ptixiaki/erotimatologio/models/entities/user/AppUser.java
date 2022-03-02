@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static com.p16021.ptixiaki.erotimatologio.models.entities.user.Role.ROLE_USER;
 import static java.util.Arrays.stream;
 
 @Entity @Data
@@ -28,9 +29,9 @@ public class AppUser implements UserDetails {
     @NotBlank(message = "email cant be null")
     private String email;
 
-    private Role role;
-    private Boolean enabled;
-    private Boolean locked;
+    private Role role = ROLE_USER;
+    private Boolean enabled = false;
+    private Boolean locked = false;
 
     public AppUser(String username, String password, String email, Role role, Boolean enabled, Boolean locked) {
         this.username = username;
@@ -39,6 +40,12 @@ public class AppUser implements UserDetails {
         this.role = role;
         this.enabled = enabled;
         this.locked = locked;
+    }
+
+    public AppUser(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
     }
 
     @Override
