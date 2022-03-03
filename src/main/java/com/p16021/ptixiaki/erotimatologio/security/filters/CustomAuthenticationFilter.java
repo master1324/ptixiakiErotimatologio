@@ -39,15 +39,17 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         String password = request.getParameter("password");
         log.info("user: " + username + " attempts authentication");
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,password);
+
         return  authenticationManager.authenticate(authenticationToken);
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         User user = (User) authResult.getPrincipal();
+
         //TODO: util class gia to secret xd
         Algorithm algorithm = Algorithm.HMAC256("xd".getBytes());
-        log.info("user " + user.getUsername() + " authenticated");
+        log.info("user " + user.getUsername() + " authenticated" );
         String access_token = JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 15 * 60 *1000))

@@ -72,8 +72,9 @@ public class UserController {
         return ResponseEntity.created(uri).body(registrationService.register(request));
     }
 
-    @GetMapping
+    @GetMapping("/confirm")
     public String confirm(@RequestParam("token") String token){
+
         return registrationService.confirmToken(token);
     }
 

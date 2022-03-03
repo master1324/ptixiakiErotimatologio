@@ -1,8 +1,7 @@
 package com.p16021.ptixiaki.erotimatologio.models.entities.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,8 +14,9 @@ import java.util.Collection;
 import static com.p16021.ptixiaki.erotimatologio.models.entities.user.Role.ROLE_USER;
 import static java.util.Arrays.stream;
 
-@Entity @Data
-@NoArgsConstructor @AllArgsConstructor
+@Entity @Getter
+@Setter
+@NoArgsConstructor @AllArgsConstructor @Slf4j
 public class AppUser implements UserDetails {
 
     @Id

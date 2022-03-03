@@ -24,17 +24,19 @@ public class BasicUserService implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final ConformationTokenService conformationTokenService;
 
-    //TODO: make login only to enabled users
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         AppUser user = userRepo.findByUsername(username)
                 .orElseThrow(()-> new UsernameNotFoundException("username not found"));
 
+        if(!user.isEnabled()){
+            throw new UsernameNotFoundException("energopoieiste to email sas");
+        }
+
         /*Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));*/
 
-        //TODO: check if puting user id instead of username suits you
         return new User(String.valueOf(user.getId()),user.getPassword(),user.getAuthorities());
     }
 
@@ -71,11 +73,7 @@ public class BasicUserService implements UserService, UserDetailsService {
         return userRepo.findById(Long.valueOf(username)).get();
     }
 
-    //TODO: remove unused methods
-    @Override
-    public List<AppUser> getUsers() {
-        return (List<AppUser>) userRepo.findAll();
-    }
+
 
 
 

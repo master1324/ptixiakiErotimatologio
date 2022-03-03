@@ -19,5 +19,6 @@ public class  RegistrationRequest {
     private final String password;
     @NotBlank(message = "email cant be null")
     private final String email;
+    private final String frontendLink;
 
 }

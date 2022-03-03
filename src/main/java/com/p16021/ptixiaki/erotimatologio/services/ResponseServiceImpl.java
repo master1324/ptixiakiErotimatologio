@@ -14,6 +14,7 @@ import com.p16021.ptixiaki.erotimatologio.services.abstactions.ResponseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -25,7 +26,6 @@ public class ResponseServiceImpl implements  ResponseService {
     private final QuestionnaireResponseRepo questionnaireResponseRepo;
     private final ResponseValidator responseValidator;
     private final FilterService filterService;
-
 
 
     @Override
@@ -66,6 +66,7 @@ public class ResponseServiceImpl implements  ResponseService {
     }
 
     @Override
+    @Transactional
     public void saveAll(Iterable<Response> responses, long userId){
 
 //        if(responses.iterator().hasNext()) {

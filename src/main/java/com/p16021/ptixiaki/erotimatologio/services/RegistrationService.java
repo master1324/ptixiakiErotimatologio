@@ -36,13 +36,11 @@ public class RegistrationService {
                 request.getEmail()));
 
         //TODO : get link from front end
-        String link = "saddasdsadasdas" + token;
-        emailSender.send(request.getEmail(),buildEmail(request.getUsername(),link));
+        String l = "http://localhost:8080/confirm?token="+ token;
+        emailSender.send(request.getEmail(),buildEmail(request.getUsername(),l));
 
         return token;
-
     }
-
 
     @Transactional
     public String confirmToken(String token) {
