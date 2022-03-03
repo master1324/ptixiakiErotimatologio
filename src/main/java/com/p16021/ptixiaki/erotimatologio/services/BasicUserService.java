@@ -5,6 +5,7 @@ import com.p16021.ptixiaki.erotimatologio.models.entities.user.ConfirmationToken
 import com.p16021.ptixiaki.erotimatologio.repos.UserRepo;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,7 +32,8 @@ public class BasicUserService implements UserService, UserDetailsService {
                 .orElseThrow(()-> new UsernameNotFoundException("username not found"));
 
         if(!user.isEnabled()){
-            throw new UsernameNotFoundException("energopoieiste to email sas");
+
+            throw new UsernameNotFoundException("xdddd");
         }
 
         /*Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();

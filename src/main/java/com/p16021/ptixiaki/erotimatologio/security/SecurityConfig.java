@@ -1,7 +1,10 @@
 package com.p16021.ptixiaki.erotimatologio.security;
 
+import com.p16021.ptixiaki.erotimatologio.repos.ConformationTokenRepo;
+import com.p16021.ptixiaki.erotimatologio.repos.UserRepo;
 import com.p16021.ptixiaki.erotimatologio.security.filters.CustomAuthenticationFilter;
 import com.p16021.ptixiaki.erotimatologio.security.filters.CustomAuthorizationFilter;
+import com.p16021.ptixiaki.erotimatologio.security.filters.RestAuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.filters.CorsFilter;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepo userRepo;
+    private final ConformationTokenRepo confirmationTokenRepo;
 
     //TODO: ftiakse kalitera to security
     @Override
@@ -48,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasAnyAuthority("ROLE_USER","ROLE_ADMIN");
 
         http.authorizeRequests().anyRequest().authenticated();
-        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
+        http.addFilter(customAuthenticationFilter());
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.httpBasic();
     }
@@ -58,10 +63,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 
+    public CustomAuthenticationFilter customAuthenticationFilter() throws Exception{
+        final CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManagerBean());
+        filter.setAuthenticationFailureHandler(authenticationFailureHandler());
+        return filter;
+    }
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception{
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    RestAuthenticationFailureHandler authenticationFailureHandler(){
+        return new RestAuthenticationFailureHandler(userRepo,confirmationTokenRepo);
     }
 
     /*@Bean

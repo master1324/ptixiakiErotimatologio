@@ -42,6 +42,7 @@ public class UserController {
     private final RegistrationService registrationService;
     private final UserService userService;
 
+    //TODO: block when is not nessesary
     @GetMapping("/is_admin")
     public boolean isAdmin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
