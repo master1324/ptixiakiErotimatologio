@@ -32,6 +32,7 @@ public class RestAuthenticationFailureHandler implements AuthenticationFailureHa
 
     private final UserRepo userRepo;
     private final ConformationTokenRepo confirmationTokenRepo;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
@@ -44,27 +45,24 @@ public class RestAuthenticationFailureHandler implements AuthenticationFailureHa
             if(!user.get().isEnabled()){
 
                 //showError("Den exete pistopoieisei to email sas",401,response);
-                throw new ResponseStatusException(UNAUTHORIZED,"Den exete pistopoieisei to email sas");
+                throwError("Den exete enrgopoieisi to email sas",UNAUTHORIZED.value(),response);
 
             }
+        }else{
+            throwError("Lathos stoixeia",UNAUTHORIZED.value(),response);
         }
-
-        //showError("Lathos kodikos i onoma xristi",401,response);
-        throw new ResponseStatusException(UNAUTHORIZED,"Lathos kodikos i onoma xristi");
-        //log.error(String.valueOf(exception));
-
-
     }
 
-    private void showError(String message,int status,HttpServletResponse response) throws IOException {
-        Map<String,Object> re= new HashMap<>();
-        re.put("status",status);
-        re.put("message",message);
 
+    private void throwError(String message,int status,HttpServletResponse response) throws IOException {
         response.setStatus(status);
-        OutputStream out = response.getOutputStream();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.writerWithDefaultPrettyPrinter().writeValue(out, re);
-        out.flush();
+        Map<String, Object> data = new HashMap<>();
+
+        data.put(
+                "exception",
+                message);
+
+        response.getOutputStream()
+                .println(mapper.writeValueAsString(data));
     }
 }

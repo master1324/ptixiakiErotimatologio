@@ -32,7 +32,6 @@ public class BasicUserService implements UserService, UserDetailsService {
                 .orElseThrow(()-> new UsernameNotFoundException("username not found"));
 
         if(!user.isEnabled()){
-
             throw new UsernameNotFoundException("xdddd");
         }
 
