@@ -3,8 +3,9 @@ package com.p16021.ptixiaki.erotimatologio.security.filters;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.p16021.ptixiaki.erotimatologio.services.AuthorizationTokenServiceImpl;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.AuthorizationTokenService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,9 +30,11 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final AuthorizationTokenService authorizationTokenService;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager){
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, AuthorizationTokenService authorizationTokenService){
         this.authenticationManager = authenticationManager;
+        this.authorizationTokenService = authorizationTokenService;
     }
 
     @Override
@@ -48,28 +51,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         User user = (User) authResult.getPrincipal();
 
-        //TODO: util class gia to secret xd
-        Algorithm algorithm = Algorithm.HMAC256("xd".getBytes());
-        log.info("user " + user.getUsername() + " authenticated" );
-        String access_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 15 * 60 *1000))
-                .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles",user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .sign(algorithm);
-
-        String refresh_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 6000 * 60 *1000))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);
-
-        response.setHeader("access_token",access_token);
-        response.setHeader("refresh_token",refresh_token);
-        Map<String,String> tokens = new HashMap<>();
-        tokens.put("access_token", access_token);
-        tokens.put("refresh_token", refresh_token);
+        Map<String,String> tokens = authorizationTokenService.generateTokens(user,request);
         response.setContentType(APPLICATION_JSON_VALUE);
+
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
 

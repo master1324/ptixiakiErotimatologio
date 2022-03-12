@@ -5,8 +5,8 @@ import com.p16021.ptixiaki.erotimatologio.repos.UserRepo;
 import com.p16021.ptixiaki.erotimatologio.security.filters.CustomAuthenticationFilter;
 import com.p16021.ptixiaki.erotimatologio.security.filters.CustomAuthorizationFilter;
 import com.p16021.ptixiaki.erotimatologio.security.filters.RestAuthenticationFailureHandler;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.AuthorizationTokenService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.filters.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,12 +18,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-
-import org.springframework.web.cors.reactive.CorsConfigurationSource;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -35,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepo userRepo;
     private final ConformationTokenRepo confirmationTokenRepo;
+    private final AuthorizationTokenService authorizationTokenService;
 
     //TODO: ftiakse kalitera to security
     @Override
@@ -64,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     public CustomAuthenticationFilter customAuthenticationFilter() throws Exception{
-        final CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManagerBean());
+        final CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManagerBean(), authorizationTokenService);
         filter.setAuthenticationFailureHandler(authenticationFailureHandler());
         return filter;
     }

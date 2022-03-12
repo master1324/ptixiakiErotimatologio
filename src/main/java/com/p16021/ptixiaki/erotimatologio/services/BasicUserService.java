@@ -43,6 +43,7 @@ public class BasicUserService implements UserService, UserDetailsService {
 
     //TODO: make username unique etc
     @Override
+    @Transactional
     public String register(AppUser user) {
 
         boolean userExists = userRepo.findByEmail(user.getEmail()).isPresent();

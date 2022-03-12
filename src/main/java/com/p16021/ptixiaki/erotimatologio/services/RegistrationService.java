@@ -22,7 +22,7 @@ public class RegistrationService {
     private final EmailSender emailSender;
     private final ConformationTokenService conformationTokenService;
 
-    public String register(RegistrationRequest request){
+    public void register(RegistrationRequest request){
 
         boolean isValidEmail = emailValidator.test(request.getEmail());
 
@@ -39,7 +39,7 @@ public class RegistrationService {
         String l = "http://localhost:8080/confirm?token="+ token;
         emailSender.send(request.getEmail(),buildEmail(request.getUsername(),l));
 
-        return token;
+        //return token;
     }
 
     @Transactional

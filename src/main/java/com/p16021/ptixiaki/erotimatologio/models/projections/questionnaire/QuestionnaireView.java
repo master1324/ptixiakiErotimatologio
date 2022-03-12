@@ -4,5 +4,6 @@ public interface QuestionnaireView {
 
     long getId();
     String getName();
+    String getShortDescription();
 
 }

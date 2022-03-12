@@ -72,7 +72,7 @@ public class ResponseServiceImpl implements  ResponseService {
 //        if(responses.iterator().hasNext()) {
 //            Response rx = responses.iterator().next();
 //            String filter = rx.getFilter();
-//            //TODO : DEN DOULEVEI OTAN DEN YPARXOUN APANTISEIS AKOMA
+//
 //            log.info(String.valueOf(rx.getQuestion().getId()) + "XXXXXXXXXXXXXXXXXXXXXXXXX");
 //            QuestionnaireView qv = questionnaireRepo.findQuestionnaireByQuestionId(rx.getQuestion().getId());
 //            //long qid = responseRepo.findQuestionnaireByResponseId(rx.getId());
@@ -115,7 +115,10 @@ public class ResponseServiceImpl implements  ResponseService {
 //        }\
 
         Response rx = responses.iterator().next();
+        log.info(rx.toString());
+        //TODO : DEN DOULEVEI OTAN DEN YPARXOUN APANTISEIS AKOMA
         QuestionnaireView qv = questionnaireRepo.findQuestionnaireByQuestionId(rx.getQuestion().getId());
+        log.info(qv.toString());
 
         responseValidator.responsesAreOk(responses,userId,qv.getId());
         responseRepo.saveAll(responses);

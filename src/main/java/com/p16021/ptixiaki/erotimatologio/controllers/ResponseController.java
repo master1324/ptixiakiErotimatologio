@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -78,7 +79,7 @@ public class ResponseController {
         try {
             responseService.saveAll(response,userId);
         }catch (Exception e){
-            log.error(e.getMessage());
+            log.error(e.toString());
         }
 
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("response/add").toUriString());

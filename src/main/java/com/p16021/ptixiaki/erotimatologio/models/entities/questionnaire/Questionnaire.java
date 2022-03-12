@@ -44,8 +44,9 @@ public class Questionnaire {
     @Transient
     private Map<IdentifierType,List<Identifier>> eligibleResponsesIdentifiers;
 
-    public Questionnaire(String name, Set<IdentifierType> identifiers, List<QuestionGroup> questionnaire) {
+    public Questionnaire(String name,String shortDescription, Set<IdentifierType> identifiers, List<QuestionGroup> questionnaire) {
         this.name = name;
+        this.shortDescription =shortDescription;
         this.identifiers = identifiers;
         this.questionnaire = questionnaire;
     }

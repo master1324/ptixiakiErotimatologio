@@ -7,9 +7,11 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.AppUser;
+import com.p16021.ptixiaki.erotimatologio.models.entities.user.ConfirmationToken;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.RegistrationRequest;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.Role;
 import com.p16021.ptixiaki.erotimatologio.services.RegistrationService;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.AuthorizationTokenService;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -41,6 +43,8 @@ public class UserController {
 
     private final RegistrationService registrationService;
     private final UserService userService;
+    private final AuthorizationTokenService authorizationTokenService;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     //TODO: block when is not nessesary
     @GetMapping("/is_admin")
@@ -69,8 +73,17 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> registerUser(@RequestBody RegistrationRequest request){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/user/signup").toUriString());
-        return ResponseEntity.created(uri).body(registrationService.register(request));
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/signup").toUriString());
+        String message;
+        try{
+            registrationService.register(request);
+            return ResponseEntity.created(uri).build();
+        }catch (IllegalStateException e){
+            log.error(e.getMessage());
+            message = e.getMessage();
+        }
+
+        return ResponseEntity.badRequest().body(message);
     }
 
     @GetMapping("/confirm")
@@ -87,24 +100,25 @@ public class UserController {
             try {
                 //String refreshToken = refresh_token;
                 //TODO ftiakse util class pou kanei handle tin idia douleia
-                Algorithm algorithm = Algorithm.HMAC256("xd".getBytes());
-
-                JWTVerifier verifier = JWT.require(algorithm).build();
-                DecodedJWT decodedJWT = verifier.verify(refreshToken);
-                String username = decodedJWT.getSubject();
-                AppUser user = userService.getUser(username);
-
-                String access_token = JWT.create()
-                        .withSubject(String.valueOf(user.getId()))
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 15 * 60 *1000))
-                        .withIssuer(request.getRequestURL().toString())
-                        .withClaim("roles",Arrays.asList(user.getRole().name()))
-                        .sign(algorithm);
-
-
-                Map<String,String> tokens = new HashMap<>();
-                tokens.put("access_token", access_token);
-                tokens.put("refresh_token", refreshToken);
+//                Algorithm algorithm = Algorithm.HMAC256("xd".getBytes());
+//
+//                JWTVerifier verifier = JWT.require(algorithm).build();
+//                DecodedJWT decodedJWT = verifier.verify(refreshToken);
+//                String username = decodedJWT.getSubject();
+//                AppUser user = userService.getUser(username);
+//
+//                String access_token = JWT.create()
+//                        .withSubject(String.valueOf(user.getId()))
+//                        .withExpiresAt(new Date(System.currentTimeMillis() + 15 * 60 *1000))
+//                        .withIssuer(request.getRequestURL().toString())
+//                        .withClaim("roles",Arrays.asList(user.getRole().name()))
+//                        .sign(algorithm);
+//
+//
+//                Map<String,String> tokens = new HashMap<>();
+//                tokens.put("access_token", access_token);
+//                tokens.put("refresh_token", refreshToken);
+                Map<String,String> tokens = authorizationTokenService.refreshAccessToken(refreshToken,request);
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 
@@ -130,5 +144,18 @@ public class UserController {
     @PostMapping("/logout")
     public void logout(@RequestBody String refreshToken){
         //TODO: apothikeuse ola ta refresh token se database kai kanto delete
+    }
+
+    private void throwError(String message,int status,HttpServletResponse response) throws IOException {
+
+        response.setStatus(status);
+        Map<String, Object> data = new HashMap<>();
+
+        data.put(
+                "exception",
+                message);
+
+        response.getOutputStream()
+                .println(mapper.writeValueAsString(data));
     }
 }
