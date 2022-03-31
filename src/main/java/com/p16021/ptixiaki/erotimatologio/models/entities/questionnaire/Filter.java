@@ -27,7 +27,7 @@ public class Filter {
     @Transient
     private Map<IdentifierType,String> decodedFilter;
     @Transient
-    private int numOfResponses;
+    private long numOfResponses;
 
     public Filter(long activeFor, long questionnaireId, long userId, String filter) {
         this.activeFor = activeFor;

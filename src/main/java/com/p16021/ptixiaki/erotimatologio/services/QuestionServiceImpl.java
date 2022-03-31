@@ -45,8 +45,8 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public ResponseType findQuestionResponseType(long qid) {
-        Optional<QuestionView> question = questionRepo.findById(qid);
-        if (question.isPresent()){
+        QuestionView question = questionRepo.findById(qid,QuestionView.class);
+        if (question != null){
             QuestGroupView group = questionGroupRepo.findByQuestionsId(qid);
             return group.getResponseType();
         }

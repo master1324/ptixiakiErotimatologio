@@ -14,7 +14,11 @@ public interface FilterService {
 
     void saveFilter(Filter filter, long userId);
 
+    void updateFilter(Filter filter,long userId);
+
     void setEnabled(String filter,boolean enabled);
 
     Iterable<Filter> getAllFilters(long userId);
+
+    Filter getFilter(long questionnaireId,String filter);
 }

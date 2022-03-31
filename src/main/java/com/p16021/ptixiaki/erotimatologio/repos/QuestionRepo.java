@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface QuestionRepo extends CrudRepository<Question,Long> {
 
     List<QuestionView> findProjectedByResponsesUserId(long userId);
-    Optional<QuestionView> findById(long qid);
+    <T> T findById(long qid,Class<T> className);
+
 
 }

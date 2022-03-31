@@ -29,6 +29,12 @@ public class FilterController {
             return ResponseEntity.ok().body(decodedFilter);
     }
 
+    @GetMapping("")
+    public ResponseEntity<Filter> getFilter(@RequestParam("id") int id, @RequestParam String filter)  {
+
+        return ResponseEntity.ok().body(filterService.getFilter(id,filter));
+    }
+
     @GetMapping("/all")
     public ResponseEntity<Iterable<Filter>> getAllFilters()  {
 
@@ -44,6 +50,16 @@ public class FilterController {
         filterService.saveFilter(filter,userId);
 
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("filter/add").toUriString());
+        return ResponseEntity.created(uri).build();
+
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<Filter> updateFilter(@RequestBody Filter filter){
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+        filterService.updateFilter(filter,userId);
+
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("filter/update").toUriString());
         return ResponseEntity.created(uri).build();
 
     }

@@ -2,6 +2,7 @@ package com.p16021.ptixiaki.erotimatologio.services;
 
 import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Identifier;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Filter;
+import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Question;
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
 import com.p16021.ptixiaki.erotimatologio.repos.*;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.FilterService;
@@ -23,6 +24,7 @@ public class FilterServiceImpl implements FilterService {
     private final FilterRepo filterRepo;
     private final TeacherRepo teacherRepo;
     private final QuestionnaireRepo questionnaireRepo;
+    private final QuestionRepo questionRepo;
     private final ResponseRepo responseRepo;
 
     @Override
@@ -71,6 +73,13 @@ public class FilterServiceImpl implements FilterService {
     }
 
     @Override
+    public void updateFilter(Filter filter, long userId) {
+        filter.setUserId(userId);
+        filterRepo.save(filter);
+    }
+
+
+    @Override
     public void setEnabled(String filter, boolean enabled) {
         Optional<Filter> f = filterRepo.findByFilter(filter);
         if(f.isPresent()){
@@ -97,5 +106,24 @@ public class FilterServiceImpl implements FilterService {
         }
 
         return filterRepo.findAll();
+    }
+
+    @Override
+    public Filter getFilter(long questionnaireId, String filter) {
+        Filter f = null;
+
+        int questionId = questionnaireRepo.questionsOfQuestionnaire(questionnaireId);
+        Question question = questionRepo.findById(questionId,Question.class);
+        long numOfResponses = question.getResponses().stream().filter(response -> response.getFilter().equals(filter)).count();
+
+        Optional<Filter> filterOptional = filterRepo.findByFilterAndQuestionnaireId(filter,questionnaireId);
+
+        if (filterOptional.isPresent()){
+            f = filterOptional.get();
+            f.setNumOfResponses(numOfResponses);
+
+        }
+
+        return f;
     }
 }

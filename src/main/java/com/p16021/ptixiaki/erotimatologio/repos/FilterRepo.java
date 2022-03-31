@@ -9,5 +9,6 @@ public interface FilterRepo extends CrudRepository<Filter,Long> {
 
     Optional<Filter> findByFilter(String filter);
     boolean existsByFilterAndQuestionnaireId(String filter,long qid);
+    Optional<Filter> findByFilterAndQuestionnaireId(String filter,long qid);
     int countByFilterAndQuestionnaireId(String filter,long qid);
 }
