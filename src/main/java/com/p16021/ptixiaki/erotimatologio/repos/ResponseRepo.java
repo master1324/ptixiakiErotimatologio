@@ -29,4 +29,6 @@ public interface ResponseRepo extends CrudRepository<Response,Long> {
             "INNER JOIN question on question.question_group_id = question_group.id " +
             "INNER JOIN response on response.question_id = question.id where response.id =?1",nativeQuery = true)
     long findQuestionnaireByResponseId(long responseId);
+
+    int countByFilterAndQuestionIdIn(String filter,Iterable<Integer> ids);
 }

@@ -1,6 +1,6 @@
 package com.p16021.ptixiaki.erotimatologio.services;
 
-import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Identifier;
+import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Identifier;
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
 import com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType;
 import com.p16021.ptixiaki.erotimatologio.repos.IdentifierRepo;
@@ -63,7 +63,7 @@ public class IdentifierServiceImpl implements IdentifierService {
     }
 
     @Override
-    public List<Identifier> findByIdentifierType(IdentifierType identifierType){
+    public List<Identifier> findByIdentifierType(IdentifierType identifierType,long userId){
         List<Identifier> identifiers = new ArrayList<>();
         switch (identifierType){
             case SUBJECT:

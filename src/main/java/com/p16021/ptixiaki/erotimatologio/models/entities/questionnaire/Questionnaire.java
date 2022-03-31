@@ -1,8 +1,8 @@
 package com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Identifier;
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
-import com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,12 +35,8 @@ public class Questionnaire {
     @JsonManagedReference(value = "questionGroups")
     private List<QuestionGroup> questionnaire;
 
-    //TODO : kane costum validator gia tin singrisi
-    @Min(1)@Max(12)
-    private Integer fromMonth;
-    @Min(1)@Max(12)
-    private Integer toMonth;
-
+    @Transient
+    private int numOfResponses;
     @Transient
     private Map<IdentifierType,List<Identifier>> eligibleResponsesIdentifiers;
 

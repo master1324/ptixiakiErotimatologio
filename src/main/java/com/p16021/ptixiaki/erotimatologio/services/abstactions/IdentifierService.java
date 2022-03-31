@@ -1,6 +1,6 @@
 package com.p16021.ptixiaki.erotimatologio.services.abstactions;
 
-import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Identifier;
+import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Identifier;
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
 import com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType;
 
@@ -14,5 +14,5 @@ public interface IdentifierService {
 
     List<String> findEligibleResponses(ResponseType responseType);
 
-    List<Identifier> findByIdentifierType(IdentifierType identifierType);
+    List<Identifier> findByIdentifierType(IdentifierType identifierType,long userId);
 }

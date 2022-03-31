@@ -22,5 +22,10 @@ public interface QuestionnaireRepo extends CrudRepository<Questionnaire,Long> {
             "where question.id =?1",nativeQuery = true)
     QuestionnaireView findQuestionnaireByQuestionId(long responseId); //INNER JOIN response on response.question_id = question.id
 
+    @Query(value = "select question.id from question " +
+            "INNER join question_group on question.question_group_id = question_group.id " +
+            "INNER JOIN questionnaire on questionnaire.id = question_group.questionnaire_id where questionnaire.id =?1",nativeQuery = true)
+    Iterable<Integer> questionsOfQuestionnaire(long qid);
+
 
 }

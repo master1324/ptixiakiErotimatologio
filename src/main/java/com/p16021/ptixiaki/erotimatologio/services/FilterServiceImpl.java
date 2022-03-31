@@ -1,10 +1,9 @@
 package com.p16021.ptixiaki.erotimatologio.services;
 
-import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Identifier;
+import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Identifier;
+import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Filter;
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
-import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.QuestionnaireValidators;
-import com.p16021.ptixiaki.erotimatologio.repos.IdentifierRepo;
-import com.p16021.ptixiaki.erotimatologio.repos.QuestionnaireRepo;
+import com.p16021.ptixiaki.erotimatologio.repos.*;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.FilterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,10 @@ import static com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType.YEA
 public class FilterServiceImpl implements FilterService {
 
     private final IdentifierRepo identifierRepo;
+    private final FilterRepo filterRepo;
+    private final TeacherRepo teacherRepo;
     private final QuestionnaireRepo questionnaireRepo;
+    private final ResponseRepo responseRepo;
 
     @Override
     public boolean filterIsOk(String filter, Long qid){
@@ -35,8 +37,6 @@ public class FilterServiceImpl implements FilterService {
         }else{
             throw new RuntimeException("Mi apodekto filter");
         }
-
-
     }
 
     @Override
@@ -53,8 +53,49 @@ public class FilterServiceImpl implements FilterService {
     }
 
     @Override
-    public String produceFilter(){
+    public String produceFilter(String[] ids){
+        Arrays.sort(ids);
+        String filter = String.join(",", ids);
+        filter = Calendar.getInstance().get(Calendar.YEAR) +","+filter;
+        return  filter;
+    }
 
-        return "";
+    @Override
+    public void saveFilter(Filter filter, long userId) {
+        boolean filterExists = filterRepo.existsByFilterAndQuestionnaireId(filter.getFilter(),filter.getQuestionnaireId());
+        if(!filterExists){
+            filter.setUserId(userId);
+            filterRepo.save(filter);
+        }
+        //TODO:filter exists error
+    }
+
+    @Override
+    public void setEnabled(String filter, boolean enabled) {
+        Optional<Filter> f = filterRepo.findByFilter(filter);
+        if(f.isPresent()){
+            f.get().setEnabled(enabled);
+            filterRepo.save(f.get());
+        }
+
+    }
+
+    @Override
+    public Iterable<Filter> getAllFilters(long userId) {
+
+        boolean isTeacher = teacherRepo.existsByAppUserId(userId);
+
+        if(!isTeacher){
+            Iterable<Filter> filters = filterRepo.findAll();
+            for (Filter f : filters) {
+                f.setDecodedFilter(decodeFilter(f.getFilter()));
+
+                //Iterable<Integer> questions = questionnaireRepo.questionsOfQuestionnaire(f.getQuestionnaireId());
+                //f.setNumOfResponses(responseRepo.countByFilterAndQuestionIdIn(f.getFilter(), questions));
+            }
+            return filters;
+        }
+
+        return filterRepo.findAll();
     }
 }

@@ -28,8 +28,6 @@ import java.util.List;
 public class ResponseController {
 
     private final ResponseService responseService;
-    private final ResponseRepo responseRepo;
-    private final QuestionnaireService questionnaireService;
 
     @GetMapping("/{rid}")
     public ResponseEntity<ResponseView> getResponse(@PathVariable long rid){
@@ -47,9 +45,10 @@ public class ResponseController {
         Long userId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
 
         //List<ResponseView> responseViews = responseService.findAll(userId,questionnaireId);
-        List<ResponseView> responseViews = responseRepo.findAllByUserId(1L);
+        //List<ResponseView> responseViews = responseRepo.findAllByUserId(1L);
 
-        return ResponseEntity.ok().body(responseViews);
+        //return ResponseEntity.ok().body(responseViews);
+        return null;
     }
 
     @GetMapping("/all_quest_responses")
@@ -60,7 +59,6 @@ public class ResponseController {
         Iterable<QuestionnaireResponse> responses = responseService.findAllQuestResponsesByUser(userId);
         return ResponseEntity.ok().body(responses);
     }
-
 
     @PostMapping(value = { "/add" }, consumes= {"application/json"})
     public ResponseEntity<Response> sendResponse(@RequestBody Response response){

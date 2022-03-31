@@ -9,7 +9,7 @@ import com.p16021.ptixiaki.erotimatologio.models.projections.result.Questionnair
 public interface  QuestionnaireService {
     Iterable<QuestionnaireView> findAll();
 
-    QuestionnaireIdentifiers findById(long id);
+    QuestionnaireIdentifiers findById(long id,long userId);
 
     QuestionnaireBody findByIdWhereUser(long qid, long userId, String filter);
 

@@ -116,7 +116,6 @@ public class ResponseServiceImpl implements  ResponseService {
 
         Response rx = responses.iterator().next();
         log.info(rx.toString());
-        //TODO : DEN DOULEVEI OTAN DEN YPARXOUN APANTISEIS AKOMA
         QuestionnaireView qv = questionnaireRepo.findQuestionnaireByQuestionId(rx.getQuestion().getId());
         log.info(qv.toString());
 

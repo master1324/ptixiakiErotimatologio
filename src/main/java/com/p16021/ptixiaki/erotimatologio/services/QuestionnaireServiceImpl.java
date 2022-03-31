@@ -1,6 +1,6 @@
 package com.p16021.ptixiaki.erotimatologio.services;
 
-import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Identifier;
+import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Identifier;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Questionnaire;
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
 import com.p16021.ptixiaki.erotimatologio.models.projections.QuestGroupView;
@@ -38,13 +38,14 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public QuestionnaireIdentifiers findById(long id){
+    public QuestionnaireIdentifiers findById(long id,long userId){
 
         QuestionnaireIdentifiers questionnaire = questionnaireRepo.findProjectedById(id,QuestionnaireIdentifiers.class);
 
         if (questionnaire != null){
             Map<IdentifierType,List<Identifier>> map = new HashMap<>();
-            questionnaire.getIdentifiers().forEach(i -> map.put(i,identifierService.findByIdentifierType(i)));
+            //TODO : NA EPISTREFEI MONO TA IDENTIFIERS POU EINAI SXETIKA`
+            questionnaire.getIdentifiers().forEach(i -> map.put(i,identifierService.findByIdentifierType(i,userId)));
             questionnaire.setEligibleResponsesIdentifiers(map);
 
             return questionnaire;

@@ -1,4 +1,4 @@
-package com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire;
+package com.p16021.ptixiaki.erotimatologio.models.entities.identifier;
 
 
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
@@ -6,10 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Identifier {
 
     @Id

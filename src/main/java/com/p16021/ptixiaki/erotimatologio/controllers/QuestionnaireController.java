@@ -30,20 +30,19 @@ public class QuestionnaireController {
 
     @GetMapping("/{qid}")
     public  ResponseEntity<QuestionnaireView> getById(@PathVariable("qid") int id, @RequestParam String filter)  {
-
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
         try {
             if(filter.equals("")){
-                QuestionnaireIdentifiers questionnaireIdentifiers = questionnaireService.findById(id);
+                QuestionnaireIdentifiers questionnaireIdentifiers = questionnaireService.findById(id,userId);
                 return ResponseEntity.ok().body(questionnaireIdentifiers);
 
             }else{
 
-                long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
                 QuestionnaireBody questionnaireBody = questionnaireService.findByIdWhereUser(id,userId,filter);
                 return ResponseEntity.ok().body(questionnaireBody);
 
             }
-        }catch (RuntimeException e){
+        }catch (Exception e){
             return ResponseEntity.notFound().build();
         }
 
@@ -77,11 +76,6 @@ public class QuestionnaireController {
        return ResponseEntity.created(uri).build();
 
    }
-
-    @PutMapping("/{qid}")
-    public void setEnabled(@PathVariable long qid){
-
-    }
 
     @DeleteMapping("/{qid}")
     public void deleteQuest(@PathVariable long qid){

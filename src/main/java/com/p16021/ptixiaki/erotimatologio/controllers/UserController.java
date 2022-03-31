@@ -1,27 +1,21 @@
 package com.p16021.ptixiaki.erotimatologio.controllers;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.p16021.ptixiaki.erotimatologio.models.entities.user.AppUser;
-import com.p16021.ptixiaki.erotimatologio.models.entities.user.ConfirmationToken;
+
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.RegistrationRequest;
-import com.p16021.ptixiaki.erotimatologio.models.entities.user.Role;
+
 import com.p16021.ptixiaki.erotimatologio.services.RegistrationService;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.AuthorizationTokenService;
-import com.p16021.ptixiaki.erotimatologio.services.abstactions.UserService;
+
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -33,8 +27,6 @@ import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.stream;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -42,7 +34,6 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class UserController {
 
     private final RegistrationService registrationService;
-    private final UserService userService;
     private final AuthorizationTokenService authorizationTokenService;
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -95,42 +86,18 @@ public class UserController {
     @PostMapping("/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response,@RequestBody String refreshToken) throws IOException {
 
-        //String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (refreshToken != null){
             try {
-                //String refreshToken = refresh_token;
-                //TODO ftiakse util class pou kanei handle tin idia douleia
-//                Algorithm algorithm = Algorithm.HMAC256("xd".getBytes());
-//
-//                JWTVerifier verifier = JWT.require(algorithm).build();
-//                DecodedJWT decodedJWT = verifier.verify(refreshToken);
-//                String username = decodedJWT.getSubject();
-//                AppUser user = userService.getUser(username);
-//
-//                String access_token = JWT.create()
-//                        .withSubject(String.valueOf(user.getId()))
-//                        .withExpiresAt(new Date(System.currentTimeMillis() + 15 * 60 *1000))
-//                        .withIssuer(request.getRequestURL().toString())
-//                        .withClaim("roles",Arrays.asList(user.getRole().name()))
-//                        .sign(algorithm);
-//
-//
-//                Map<String,String> tokens = new HashMap<>();
-//                tokens.put("access_token", access_token);
-//                tokens.put("refresh_token", refreshToken);
                 Map<String,String> tokens = authorizationTokenService.refreshAccessToken(refreshToken,request);
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 
-
             }catch (Exception e){
-
 
                 response.setHeader("error",e.getMessage());
                 response.setStatus(FORBIDDEN.value());
-                //response.sendError(FORBIDDEN.value());
                 Map<String,String> errors = new HashMap<>();
-                errors.put("error_message", e.getMessage());
+                errors.put("error_message xd", e.getMessage());
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), errors);
             }
