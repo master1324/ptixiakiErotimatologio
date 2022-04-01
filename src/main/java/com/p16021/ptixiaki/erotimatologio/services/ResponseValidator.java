@@ -44,8 +44,14 @@ public class ResponseValidator {
 
         for (Response response:responses){
             responseIsOk(response);
-            filterService.filterIsOk(response.getFilter(),questionnaireID);
+            boolean filterIsOk = filterService.filterIsOk(response.getFilter(),questionnaireID);
             response.setUserId(userID);
+            if(!responseIsOk(response) ){
+                throw new RuntimeException("Μη αποδεκτή απάντηση");
+            }
+            if(!filterIsOk){
+                throw new RuntimeException("Τα αναγνωριστικά που επιλέξατε δεν δέχονται απαντήσεις αυτήν την στιγμή");
+            }
         }
 
         //TODO: AN OLA TA FILTER EINAI IDIA

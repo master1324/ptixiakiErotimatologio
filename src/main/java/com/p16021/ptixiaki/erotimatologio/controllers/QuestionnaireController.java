@@ -1,24 +1,32 @@
 package com.p16021.ptixiaki.erotimatologio.controllers;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Questionnaire;
 import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.QuestionnaireIdentifiers;
 import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.QuestionnaireBody;
 import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.QuestionnaireView;
 import com.p16021.ptixiaki.erotimatologio.models.projections.result.QuestionnaireResult;
 
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.FilterService;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.QuestionnaireService;
 
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/quest")
@@ -27,6 +35,7 @@ import java.net.URI;
 public class QuestionnaireController {
 
     private final QuestionnaireService questionnaireService;
+    private final ObjectMapper mapper ;
 
     @GetMapping("/{qid}")
     public  ResponseEntity<QuestionnaireView> getById(@PathVariable("qid") int id, @RequestParam String filter)  {
@@ -42,8 +51,9 @@ public class QuestionnaireController {
                 return ResponseEntity.ok().body(questionnaireBody);
 
             }
-        }catch (Exception e){
-            return ResponseEntity.notFound().build();
+        }catch (RuntimeException e){
+            log.error(e.toString());
+            throw new ResponseStatusException(HttpStatus.CONFLICT,e.getMessage());
         }
 
     }
@@ -81,6 +91,19 @@ public class QuestionnaireController {
     public void deleteQuest(@PathVariable long qid){
       //questionnaireService.deleteById(qid);
    }
+
+    private void throwError(String message, int status, HttpServletResponse response) throws IOException {
+
+        response.setStatus(status);
+        Map<String, Object> data = new HashMap<>();
+
+        data.put(
+                "exception",
+                message);
+
+        response.getOutputStream()
+                .println(mapper.writeValueAsString(data));
+    }
 
 
 

@@ -1,10 +1,7 @@
 package com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire;
 
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Map;
@@ -13,6 +10,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
+@ToString
 public class Filter {
 
     @Id

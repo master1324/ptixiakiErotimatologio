@@ -30,15 +30,22 @@ public class FilterServiceImpl implements FilterService {
     @Override
     public boolean filterIsOk(String filter, Long qid){
         //QuestionnaireValidators questionnaireValidators = questionnaireRepo.findProjectedById(qid,QuestionnaireValidators.class);
-        int year = Year.now().getValue();
 
-        String[] filterArray= filter.split(",");
+        boolean filterExists = filterRepo.existsByFilterAndQuestionnaireIdAndEnabled(filter,qid,true);
 
-        if (filterArray[0].equals(String.valueOf(year))){
-            return true;
-        }else{
-            throw new RuntimeException("Mi apodekto filter");
+        if (filterExists){
+            int year = Year.now().getValue();
+
+            String[] filterArray= filter.split(",");
+
+            if (filterArray[0].equals(String.valueOf(year))){
+                return true;
+            }else{
+                throw new RuntimeException("Mi apodekto filter");
+            }
         }
+
+        return false;
     }
 
     @Override

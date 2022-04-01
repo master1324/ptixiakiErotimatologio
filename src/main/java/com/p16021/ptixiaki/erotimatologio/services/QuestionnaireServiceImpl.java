@@ -13,6 +13,7 @@ import com.p16021.ptixiaki.erotimatologio.models.projections.result.QuestGroupRe
 import com.p16021.ptixiaki.erotimatologio.models.projections.result.QuestionResultView;
 import com.p16021.ptixiaki.erotimatologio.models.projections.result.QuestionnaireResult;
 import com.p16021.ptixiaki.erotimatologio.repos.QuestionnaireRepo;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.FilterService;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.IdentifierService;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.QuestionService;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.QuestionnaireService;
@@ -26,7 +27,7 @@ import java.util.*;
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     private final QuestionnaireRepo questionnaireRepo;
-
+    private final FilterService filterService;
     private final ResponseServiceImpl responseService;
     private final QuestionService questionService;
     private final IdentifierService identifierService;
@@ -58,35 +59,38 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Override
     public QuestionnaireBody findByIdWhereUser(long qid, long userId, String filter){
 
-        QuestionnaireBody questionnaire = questionnaireRepo.findProjectedById(qid, QuestionnaireBody.class);
 
-        if(questionnaire != null){
 
-            List<ResponseView> userResponses = responseService
-                    .findAllUserResponsesByFilter(questionnaire,userId,qid,filter);
+            QuestionnaireBody questionnaire = questionnaireRepo.findProjectedById(qid, QuestionnaireBody.class);
 
-            if(userResponses != null){
-                for(QuestGroupView group:questionnaire.getQuestionnaire()){
+            if(questionnaire != null){
 
-                    List<String> eligibleResponses = identifierService.findEligibleResponses(group.getResponseType());
-                    group.setEligibleResponses(eligibleResponses);
+                List<ResponseView> userResponses = responseService
+                        .findAllUserResponsesByFilter(questionnaire,userId,qid,filter);
 
-                    for (QuestionView question: group.getQuestions()){
+                if(userResponses != null){
+                    for(QuestGroupView group:questionnaire.getQuestionnaire()){
 
-                        Optional<ResponseView> response = userResponses.stream()
-                                .filter(r -> r.getQuestion().getId().equals(question.getId())).findAny();
+                        List<String> eligibleResponses = identifierService.findEligibleResponses(group.getResponseType());
+                        group.setEligibleResponses(eligibleResponses);
 
-                        response.ifPresent(responseView -> question.setUserResponse(responseView.getResponse()));
-                        response.ifPresent(responseView -> question.setResponseId(responseView.getId()));
-                        question.setEligibleResponses(eligibleResponses);
+                        for (QuestionView question: group.getQuestions()){
+
+                            Optional<ResponseView> response = userResponses.stream()
+                                    .filter(r -> r.getQuestion().getId().equals(question.getId())).findAny();
+
+                            response.ifPresent(responseView -> question.setUserResponse(responseView.getResponse()));
+                            response.ifPresent(responseView -> question.setResponseId(responseView.getId()));
+                            question.setEligibleResponses(eligibleResponses);
+                        }
                     }
                 }
+
+                return questionnaire;
+            }else{
+                throw new RuntimeException("Den uparxei to erotimalogio me id " + qid);
             }
 
-            return questionnaire;
-        }else{
-            throw new RuntimeException("Den uparxei to erotimalogio me id " + qid);
-        }
 
 
     }
