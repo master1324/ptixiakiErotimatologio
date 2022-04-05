@@ -81,7 +81,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
                             response.ifPresent(responseView -> question.setUserResponse(responseView.getResponse()));
                             response.ifPresent(responseView -> question.setResponseId(responseView.getId()));
-                            question.setEligibleResponses(eligibleResponses);
+                            //question.setEligibleResponses(eligibleResponses);
                         }
                     }
                 }

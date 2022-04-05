@@ -40,29 +40,31 @@ public class RestAuthenticationFailureHandler implements AuthenticationFailureHa
 
         String username = request.getParameter("username");
         Optional<AppUser> user = userRepo.findByUsername(username);
-
+        log.info(exception.toString());
         if(user.isPresent()){
             if(!user.get().isEnabled()){
-
-                //showError("Den exete pistopoieisei to email sas",401,response);
-                throwError("Den exete enrgopoieisi to email sas",UNAUTHORIZED.value(),response);
-
+                log.info(exception.getMessage());
+                throwError("Δεν έχετε ενεργοποιήσει το email σας",UNAUTHORIZED.value(),response);
+            }else{
+                throwError("Λάθος όνομα χρήστη / κωδικός",UNAUTHORIZED.value(),response);
             }
         }else{
-            throwError("Lathos stoixeia",UNAUTHORIZED.value(),response);
+            throwError("Λάθος όνομα χρήστη / κωδικός",UNAUTHORIZED.value(),response);
         }
     }
 
 
     private void throwError(String message,int status,HttpServletResponse response) throws IOException {
         response.setStatus(status);
+        //response.setContentType("text/event-stream; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
         Map<String, Object> data = new HashMap<>();
 
         data.put(
                 "exception",
                 message);
 
-        response.getOutputStream()
+        response.getWriter()
                 .println(mapper.writeValueAsString(data));
     }
 }

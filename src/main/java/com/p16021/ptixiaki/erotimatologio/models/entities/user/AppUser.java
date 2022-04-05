@@ -43,11 +43,20 @@ public class AppUser implements UserDetails {
         this.locked = locked;
     }
 
+    public AppUser(String username, String password, String email, Boolean enabled) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.enabled = enabled;
+    }
+
     public AppUser(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
     }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

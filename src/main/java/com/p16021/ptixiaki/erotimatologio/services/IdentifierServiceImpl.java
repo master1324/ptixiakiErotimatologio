@@ -46,6 +46,17 @@ public class IdentifierServiceImpl implements IdentifierService {
     }
 
     @Override
+    public Map<IdentifierType, List<Identifier>> findAllByUser(long userId) {
+
+        Map<IdentifierType,List<Identifier>> identifierMap = new HashMap<>();
+
+
+
+        return null;
+    }
+
+
+    @Override
     public List<String> findEligibleResponses(ResponseType responseType){
         List<String> eligibleResponses = new ArrayList<>();
 
