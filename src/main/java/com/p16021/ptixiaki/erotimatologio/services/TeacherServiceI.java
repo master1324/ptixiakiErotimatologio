@@ -3,6 +3,7 @@ package com.p16021.ptixiaki.erotimatologio.services;
 import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Teacher;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.AppUser;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.RegistrationRequest;
+import com.p16021.ptixiaki.erotimatologio.models.entities.user.TeacherRequest;
 import com.p16021.ptixiaki.erotimatologio.repos.TeacherRepo;
 import com.p16021.ptixiaki.erotimatologio.repos.UserRepo;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.TeacherService;
@@ -44,21 +45,32 @@ public class TeacherServiceI implements TeacherService {
 
     @Override
     @Transactional
-    public void addTeacher(Map<String,Object> teacher) {
+    public void addTeacher(TeacherRequest teacherRequest) {
 
-        Teacher teacher1 = (Teacher) teacher.get("teacher");
-        RegistrationRequest request = (RegistrationRequest) teacher.get("request");
+        Teacher t = new Teacher(teacherRequest.getName(),teacherRequest.getSubjects(),teacherRequest.getDepartments());
+        RegistrationRequest request =
+                new RegistrationRequest(teacherRequest.getUsername(),"xd", teacherRequest.getEmail(), "xd");
+
+        log.info(request.toString());
 
         boolean userExists = userRepo.findByEmail(request.getEmail()).isPresent();
         if(userExists){
             throw new IllegalStateException("email taken");
         }
 
-        teacherRepo.save(teacher1);
         userRepo.save(new AppUser(request.getUsername(),
                 passwordEncoder.encode(request.getPassword()),
                 request.getEmail(),
                 true));
+
+        Optional<AppUser> optional = userRepo.findByEmail(request.getEmail());
+
+        if(optional.isPresent()){
+            t.setAppUserId(optional.get().getId());
+            teacherRepo.save(t);
+        }else{
+            throw new RuntimeException("Den dimiourgithike");
+        }
 
     }
 

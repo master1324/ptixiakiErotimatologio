@@ -2,6 +2,7 @@ package com.p16021.ptixiaki.erotimatologio.controllers;
 
 import com.p16021.ptixiaki.erotimatologio.models.AppResponse;
 import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Teacher;
+import com.p16021.ptixiaki.erotimatologio.models.entities.user.TeacherRequest;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.TeacherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +61,7 @@ public class TeacherController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<AppResponse> addTeacher(@RequestBody Map<String,Object> teacher){
+    public ResponseEntity<AppResponse> addTeacher(@RequestBody TeacherRequest teacher){
         try {
             teacherService.addTeacher(teacher);
             return ResponseEntity.ok(
@@ -72,7 +73,8 @@ public class TeacherController {
                             .build()
             );
         }catch (Exception e){
-            return error(401 ,null,null,null);
+            log.error(e.toString());
+            return error(401 ,"tell","me","why");
         }
     }
 

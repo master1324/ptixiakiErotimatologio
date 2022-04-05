@@ -18,7 +18,7 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = 30000)
     @Transactional
     public void reportCurrentTime() {
-        log.info("Checking active filters");
+        //log.info("Checking active filters");
         filterRepo.disableFilters(System.currentTimeMillis());
         //log.info("The time is now {}", dateFormat.format(new Date()));
     }

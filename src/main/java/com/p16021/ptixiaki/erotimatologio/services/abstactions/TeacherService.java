@@ -1,6 +1,7 @@
 package com.p16021.ptixiaki.erotimatologio.services.abstactions;
 
 import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Teacher;
+import com.p16021.ptixiaki.erotimatologio.models.entities.user.TeacherRequest;
 
 import java.util.Map;
 
@@ -9,7 +10,7 @@ public interface TeacherService {
 
     Teacher getTeacher(long id);
 
-    void addTeacher(Map<String,Object> teacher);
+    void addTeacher(TeacherRequest teacher);
 
     void updateTeacher(Teacher teacher,long userId);
 

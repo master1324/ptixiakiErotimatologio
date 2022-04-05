@@ -1,6 +1,7 @@
 package com.p16021.ptixiaki.erotimatologio.controllers;
 
 import com.p16021.ptixiaki.erotimatologio.models.AppResponse;
+import com.p16021.ptixiaki.erotimatologio.repos.IdentifierRepo;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.IdentifierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,21 +21,22 @@ import static org.springframework.http.HttpStatus.OK;
 @Slf4j
 public class IdentifierController {
 
-    private final IdentifierService identifierService;
+    private final IdentifierRepo identifierService;
 
-    @GetMapping("/eligible_responses")
-    public ResponseEntity<AppResponse> getTeachers(){
+    @GetMapping("/all")
+    public ResponseEntity<AppResponse> getAll(){
 
         try {
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
-                            .data(Map.of("eligible_responses" , identifierService.findAll()))
+                            .data(Map.of("identifiers" , identifierService.findAll()))
                             .status(OK)
                             .statusCode(OK.value())
                             .build()
             );
         }catch (Exception e){
+            log.error(e.toString());
             return error(401 ,null,null,null);
         }
 
