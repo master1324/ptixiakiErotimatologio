@@ -1,6 +1,7 @@
 package com.p16021.ptixiaki.erotimatologio.v2.controllers;
 
 import com.p16021.ptixiaki.erotimatologio.models.AppResponse;
+import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.QuestionnaireResponse;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Response;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.RegistrationRequest;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.UpdateProfileRequest;
@@ -30,13 +31,36 @@ public class ResponseControllerV2 {
     @GetMapping("/all")
     public ResponseEntity<AppResponse> getResponses(){
 
-        return error(501 ,"not implemented","not implemented",null);
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        try {
+            return ResponseEntity.ok(
+                    AppResponse.builder()
+                            .timeStamp(LocalDateTime.now())
+                            .data(Map.of("qresponses" , responseService.findAllQuestResponsesByUser(userId)))
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .build()
+            );
+        }catch (Exception e){
+            return error(401 ,null,null,null);
+        }
+
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AppResponse> getResponse(@PathVariable("id") long id){
 
         return error(501 ,"not implemented","not implemented",null);
+    }
+
+    @GetMapping("/q_responses")
+    public ResponseEntity<Iterable<QuestionnaireResponse>> getAllQuestionnaireResponses(){
+
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        Iterable<QuestionnaireResponse> responses = responseService.findAllQuestResponsesByUser(userId);
+        return ResponseEntity.ok().body(responses);
     }
 
     @PostMapping("/add")

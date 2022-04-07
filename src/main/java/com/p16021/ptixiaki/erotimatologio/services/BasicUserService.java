@@ -84,12 +84,14 @@ public class BasicUserService implements UserService, UserDetailsService {
     @Override
     public void updateUser(UpdateProfileRequest request,long userId) {
 
-        log.info(passwordEncoder.encode(request.getOldPassword()));
-        boolean userExists = userRepo.existsByIdAndPassword(userId,passwordEncoder.encode(request.getOldPassword()));
+        Optional<AppUser> appUserOptional = userRepo.findById(userId);
 
-        //SecurityContextHolder.getContext().
+        if(appUserOptional.isEmpty()){
+            throw new RuntimeException("Sfalma");
+        }
+        boolean passwordsMatch = passwordEncoder.matches(request.getOldPassword(), appUserOptional.get().getPassword());
 
-        if(!userExists){
+        if(!passwordsMatch){
             throw new RuntimeException("Lathos kodikos");
         }
 

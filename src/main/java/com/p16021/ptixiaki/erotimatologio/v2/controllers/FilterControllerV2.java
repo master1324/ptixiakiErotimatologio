@@ -36,7 +36,7 @@ public class FilterControllerV2 {
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
-                            .data(Map.of("teachers" , filterService.getAllFilters(userId)))
+                            .data(Map.of("filters" , filterService.getAllFilters(userId)))
                             .status(OK)
                             .statusCode(OK.value())
                             .build()
