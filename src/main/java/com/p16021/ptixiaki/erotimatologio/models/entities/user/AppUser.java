@@ -43,6 +43,14 @@ public class AppUser implements UserDetails {
         this.locked = locked;
     }
 
+    public AppUser(long id,String username, String password, String email, Boolean enabled) {
+        this.id =id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.enabled = enabled;
+    }
+
     public AppUser(String username, String password, String email, Boolean enabled) {
         this.username = username;
         this.password = password;

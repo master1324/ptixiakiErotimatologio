@@ -1,9 +1,10 @@
-package com.p16021.ptixiaki.erotimatologio.controllers;
+package com.p16021.ptixiaki.erotimatologio.v2.controllers;
 
 import com.p16021.ptixiaki.erotimatologio.models.AppResponse;
-import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Teacher;
-import com.p16021.ptixiaki.erotimatologio.models.entities.user.TeacherRequest;
-import com.p16021.ptixiaki.erotimatologio.services.abstactions.TeacherService;
+import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Filter;
+import com.p16021.ptixiaki.erotimatologio.models.entities.user.RegistrationRequest;
+import com.p16021.ptixiaki.erotimatologio.models.entities.user.UpdateProfileRequest;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.FilterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,24 +16,27 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/teacher")
+@RequestMapping("/v2/filter")
 @RequiredArgsConstructor
 @Slf4j
-public class TeacherController {
+public class FilterControllerV2 {
 
-    private final TeacherService teacherService;
+    private final FilterService filterService;
 
     @GetMapping("/all")
-    public ResponseEntity<AppResponse> getTeachers(){
+    public ResponseEntity<AppResponse> getFilters(){
+
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
 
         try {
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
-                            .data(Map.of("teachers" , teacherService.getTeachers()))
+                            .data(Map.of("teachers" , filterService.getAllFilters(userId)))
                             .status(OK)
                             .statusCode(OK.value())
                             .build()
@@ -43,27 +47,32 @@ public class TeacherController {
 
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AppResponse> getTeacher(@PathVariable("id") long id){
+    @GetMapping("/{filter}")
+    public ResponseEntity<AppResponse> getFilter(@PathVariable("filter") String filter){
+
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
 
         try{
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
-                            .data(Map.of("teacher" , teacherService.getTeacher(id)))
+                            .data(Map.of("user" , filterService.getFilter(userId,filter)))
                             .status(OK)
                             .statusCode(OK.value())
                             .build()
             );
         }catch (Exception e){
-            return error(401 ,null,null,null);
+            return error(404 ,null,null,"not found sss");
         }
     }
 
     @PostMapping("/add")
-    public ResponseEntity<AppResponse> addTeacher(@RequestBody TeacherRequest teacher){
+    public ResponseEntity<AppResponse> addFilter(@RequestBody Filter filter){
+
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+
         try {
-            teacherService.addTeacher(teacher);
+            filterService.saveFilter(filter,userId);
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
@@ -73,23 +82,17 @@ public class TeacherController {
                             .build()
             );
         }catch (Exception e){
-            log.error(e.toString());
             return error(401 ,"tell","me","why");
         }
     }
-    
+
     @PutMapping("/update/{id}")
-    public ResponseEntity<AppResponse> updateTeacher(@RequestBody Teacher teacher){
+    public ResponseEntity<AppResponse> updateFilter(@RequestBody Filter filter){
 
-        long userId = -1;
-
-        if (SecurityContextHolder.getContext().getAuthentication()
-                .getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("TEACHER"))) {
-             userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-        }
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
 
         try{
-            teacherService.updateTeacher(teacher,userId);
+            filterService.updateFilter(filter,userId);
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
@@ -104,22 +107,23 @@ public class TeacherController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<AppResponse> deleteTeacher(@PathVariable long id){
+    public ResponseEntity<AppResponse> deleteUser(@PathVariable long id){
 
-        try{
-            teacherService.deleteTeacher(id);
-            return ResponseEntity.ok(
-                    AppResponse.builder()
-                            .timeStamp(LocalDateTime.now())
-                            //.data(Map.of("teacher" , teacherService.deleteTeacher(id)))
-                            .status(OK)
-                            .statusCode(OK.value())
-                            .build()
-            );
-        }catch (Exception e){
-            return error(401 ,null,null,null);
-        }
+//        try{
+//            teacherService.deleteTeacher(id);
+//            return ResponseEntity.ok(
+//                    AppResponse.builder()
+//                            .timeStamp(LocalDateTime.now())
+//                            //.data(Map.of("teacher" , teacherService.deleteTeacher(id)))
+//                            .status(OK)
+//                            .statusCode(OK.value())
+//                            .build()
+//            );
+//        }catch (Exception e){
+//            return error(401 ,null,null,null);
+//        }
 
+        return error(501 ,"not implemented","not implemented",null);
 
     }
 
@@ -137,5 +141,4 @@ public class TeacherController {
         return new ResponseEntity<>(errorResponse,HttpStatus.valueOf(status));
 
     }
-
 }

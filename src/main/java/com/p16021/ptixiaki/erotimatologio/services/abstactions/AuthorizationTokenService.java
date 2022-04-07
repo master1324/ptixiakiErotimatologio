@@ -1,6 +1,7 @@
 package com.p16021.ptixiaki.erotimatologio.services.abstactions;
 
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.security.core.userdetails.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,4 +12,5 @@ public interface AuthorizationTokenService {
 
     Map<String,String> generateTokens(User user, HttpServletRequest request);
     Map<String,String> refreshAccessToken(String refreshToken,HttpServletRequest request);
+    DecodedJWT decodeToken(String token);
 }

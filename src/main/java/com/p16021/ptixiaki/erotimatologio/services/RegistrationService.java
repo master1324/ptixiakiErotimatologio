@@ -37,7 +37,7 @@ public class RegistrationService {
 
         //TODO : get link from front end
         String l = "http://localhost:8080/confirm?token="+ token;
-        emailSender.send(request.getEmail(),buildEmail(request.getUsername(),l));
+        emailSender.send(request.getEmail(),buildEmail(request.getUsername(),l),"Epibebeosi email");
 
         //return token;
     }

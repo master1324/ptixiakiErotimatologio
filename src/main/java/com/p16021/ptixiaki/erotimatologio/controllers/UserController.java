@@ -37,7 +37,6 @@ public class UserController {
     private final AuthorizationTokenService authorizationTokenService;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    //TODO: block when is not nessesary
     @GetMapping("/is_admin")
     public boolean isAdmin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -110,7 +109,6 @@ public class UserController {
 
     @PostMapping("/logout")
     public void logout(@RequestBody String refreshToken){
-        //TODO: apothikeuse ola ta refresh token se database kai kanto delete
     }
 
     private void throwError(String message,int status,HttpServletResponse response) throws IOException {

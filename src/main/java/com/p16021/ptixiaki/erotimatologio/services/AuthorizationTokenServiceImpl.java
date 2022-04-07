@@ -71,6 +71,15 @@ public class AuthorizationTokenServiceImpl implements AuthorizationTokenService 
         return tokens;
     }
 
+    @Override
+    public DecodedJWT decodeToken(String token) {
+
+        JWTVerifier verifier = JWT.require(loadSecret()).build();
+
+        return verifier.verify(token);
+    }
+
+
     private Algorithm loadSecret() {
         return Algorithm.HMAC256("xd".getBytes());
     }

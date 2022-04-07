@@ -45,7 +45,6 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
         if (questionnaire != null){
             Map<IdentifierType,List<Identifier>> map = new HashMap<>();
-            //TODO : NA EPISTREFEI MONO TA IDENTIFIERS POU EINAI SXETIKA`
             questionnaire.getIdentifiers().forEach(i -> map.put(i,identifierService.findByIdentifierType(i,userId)));
             questionnaire.setEligibleResponsesIdentifiers(map);
 

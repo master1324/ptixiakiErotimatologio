@@ -1,4 +1,4 @@
-package com.p16021.ptixiaki.erotimatologio.controllers;
+package com.p16021.ptixiaki.erotimatologio.v2.controllers;
 
 import com.p16021.ptixiaki.erotimatologio.models.AppResponse;
 import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Teacher;
@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/teacher")
+@RequestMapping("/v2/teacher")
 @RequiredArgsConstructor
 @Slf4j
-public class TeacherController {
+public class TeacherControllerV2 {
 
     private final TeacherService teacherService;
 

@@ -1,9 +1,11 @@
 package com.p16021.ptixiaki.erotimatologio.services;
 
 import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Identifier;
+import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Teacher;
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
 import com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType;
 import com.p16021.ptixiaki.erotimatologio.repos.IdentifierRepo;
+import com.p16021.ptixiaki.erotimatologio.repos.TeacherRepo;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.IdentifierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import static com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType.EXA
 public class IdentifierServiceImpl implements IdentifierService {
 
     private final IdentifierRepo identifierRepo;
+    private final TeacherRepo teacherRepo;
 
     @Override
     public Identifier findById(long id){
@@ -76,14 +79,32 @@ public class IdentifierServiceImpl implements IdentifierService {
     @Override
     public List<Identifier> findByIdentifierType(IdentifierType identifierType,long userId){
         List<Identifier> identifiers = new ArrayList<>();
+        Optional<Teacher> teacherOptional = Optional.empty();
+        if(userId!=-1){
+            teacherOptional = teacherRepo.findByAppUserId(userId);
+        }
+
+
         switch (identifierType){
             case SUBJECT:
+                if(teacherOptional.isPresent()){
+                   identifiers.addAll(teacherOptional.get().getSubjects());
+                   break;
+                }
                 identifiers.addAll(identifierRepo.findAllByType(IdentifierType.SUBJECT));
                 break;
             case TEACHER:
+                if(teacherOptional.isPresent()){
+                    identifiers.add(teacherOptional.get());
+                    break;
+                }
                 identifiers.addAll(identifierRepo.findAllByType(IdentifierType.TEACHER));
                 break;
             case DEPARTMENT:
+                if(teacherOptional.isPresent()){
+                    identifiers.addAll(teacherOptional.get().getDepartments());
+                    break;
+                }
                 identifiers.addAll(identifierRepo.findAllByType(IdentifierType.DEPARTMENT));
                 break;
             case EXAMINO:

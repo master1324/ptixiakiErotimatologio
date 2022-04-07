@@ -31,7 +31,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final ConformationTokenRepo confirmationTokenRepo;
     private final AuthorizationTokenService authorizationTokenService;
 
-    //TODO: ftiakse kalitera to security
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //http.cors();
@@ -49,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter());
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(authorizationTokenService), UsernamePasswordAuthenticationFilter.class);
         http.httpBasic();
     }
 

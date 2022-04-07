@@ -6,6 +6,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.AuthorizationTokenService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,7 +32,10 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @Slf4j
+@RequiredArgsConstructor
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
+
+    private final AuthorizationTokenService authorizationTokenService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -42,11 +47,11 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
                 try {
                     String token = authorizationHeader.substring("Bearer ".length());
-                    //TODO ftiakse util class pou kanei handle tin idia douleia
-                    Algorithm algorithm = Algorithm.HMAC256("xd".getBytes());
-
-                    JWTVerifier verifier = JWT.require(algorithm).build();
-                    DecodedJWT decodedJWT = verifier.verify(token);
+//                    Algorithm algorithm = Algorithm.HMAC256("xd".getBytes());
+//
+//                    JWTVerifier verifier = JWT.require(algorithm).build();
+//                    DecodedJWT decodedJWT = verifier.verify(token);
+                    DecodedJWT decodedJWT = authorizationTokenService.decodeToken(token);
                     String username = decodedJWT.getSubject();
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();

@@ -12,7 +12,6 @@ import javax.validation.constraints.NotBlank;
 @ToString
 public class  RegistrationRequest {
 
-    //TODO: bale deutero password k tsekare to h kanto sto frontend
     @NotBlank(message = "username cant be null")
     private final String username;
     @NotBlank(message = "password cant be null")

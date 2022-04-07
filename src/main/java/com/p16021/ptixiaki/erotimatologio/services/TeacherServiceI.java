@@ -1,5 +1,6 @@
 package com.p16021.ptixiaki.erotimatologio.services;
 
+import com.p16021.ptixiaki.erotimatologio.email.EmailSender;
 import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Teacher;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.AppUser;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.RegistrationRequest;
@@ -24,6 +25,7 @@ public class TeacherServiceI implements TeacherService {
     private final PasswordEncoder passwordEncoder;
     private final TeacherRepo teacherRepo;
     private final UserRepo userRepo;
+    private final EmailSender emailSender;
 
     @Override
     public Iterable<Teacher> getTeachers() {
@@ -59,7 +61,7 @@ public class TeacherServiceI implements TeacherService {
         }
 
         userRepo.save(new AppUser(request.getUsername(),
-                passwordEncoder.encode(request.getPassword()),
+                passwordEncoder.encode("1"),
                 request.getEmail(),
                 true));
 
@@ -68,6 +70,7 @@ public class TeacherServiceI implements TeacherService {
         if(optional.isPresent()){
             t.setAppUserId(optional.get().getId());
             teacherRepo.save(t);
+            emailSender.send(request.getEmail(),"username: "+request.getUsername()+" password: " + "1" ,"Dimiourgithike logariasmos sto ErotimatologioApp");
         }else{
             throw new RuntimeException("Den dimiourgithike");
         }
@@ -89,7 +92,12 @@ public class TeacherServiceI implements TeacherService {
     }
 
     @Override
+    @Transactional
     public void deleteTeacher(long id) {
-        teacherRepo.deleteById(id);
+        Optional<Teacher> teacherOptional = teacherRepo.findById(id);
+        if (teacherOptional.isPresent()){
+            userRepo.deleteById(teacherOptional.get().getAppUserId());
+            teacherRepo.deleteById(id);
+        }
     }
 }
