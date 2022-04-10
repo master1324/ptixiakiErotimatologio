@@ -79,7 +79,8 @@ public class AppUserController {
                             .build()
             );
         }catch (Exception e){
-            return error(401 ,"tell","me","why");
+            log.error(e.getMessage());
+            return error(401 ,"tell","me",e.getMessage());
         }
     }
 
@@ -93,7 +94,6 @@ public class AppUserController {
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
-                            //.data(Map.of("teacher" , teacherService.updateTeacher(teacher)))
                             .status(CREATED)
                             .statusCode(CREATED.value())
                             .build()

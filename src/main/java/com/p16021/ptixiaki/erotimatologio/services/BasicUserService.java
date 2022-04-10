@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.p16021.ptixiaki.erotimatologio.models.entities.user.Role.ROLE_TEACHER;
 
 
 @Service @RequiredArgsConstructor @Transactional @Slf4j
@@ -52,16 +53,21 @@ public class BasicUserService implements UserService, UserDetailsService {
         return new User(String.valueOf(user.getId()),user.getPassword(),user.getAuthorities());
     }
 
-    //TODO: make username unique etc
     @Override
     @Transactional
     public String register(AppUser user) {
 
         boolean userExists = userRepo.findByEmail(user.getEmail()).isPresent();
+        boolean usernameExists = userRepo.findByUsername(user.getUsername()).isPresent();
 
         if(userExists){
-            throw new IllegalStateException("email taken");
+            throw new IllegalStateException("Υπάρχει ειδή λογαριασμός με αυτό το email");
         }
+
+        if(usernameExists){
+            throw new IllegalStateException("Υπάρχει ειδή λογαριασμός με αυτό το όνομα χρήστη");
+        }
+
         userRepo.save(user);
 
         String token = UUID.randomUUID().toString();
@@ -100,10 +106,7 @@ public class BasicUserService implements UserService, UserDetailsService {
                 request.getUsername(),
                 passwordEncoder.encode(request.getNewPassword()),
                 request.getEmail(),
-                true
-                )
-        );
-
+                true));
     }
 
     @Override

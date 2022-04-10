@@ -37,20 +37,29 @@ public class UserController {
     private final AuthorizationTokenService authorizationTokenService;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    @GetMapping("/is_admin")
-    public boolean isAdmin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
-        log.info("Admin check " + isAdmin);
-        return isAdmin;
-    }
+//    @GetMapping("/is_admin")
+//    public boolean isAdmin() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+//        log.info("Admin check " + isAdmin);
+//        return isAdmin;
+//    }
+//
+//    @GetMapping("/is_user")
+//    public boolean isUser(){
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//         boolean isUser = authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_USER"));
+//        log.info("User check " + isUser);
+//         return isUser;
+//    }
 
-    @GetMapping("/is_user")
-    public boolean isUser(){
+    @GetMapping("/hasRole")
+    public boolean harRole(@RequestParam String[] roles){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-         boolean isUser = authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_USER"));
-        log.info("User check " + isUser);
-         return isUser;
+        //boolean isUser = authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals(role));
+        boolean isUser = authentication.getAuthorities().stream().anyMatch(auth -> Arrays.stream(roles).anyMatch(role ->auth.getAuthority().equals(role)));
+        log.info("Is user " + Arrays.toString(roles) + ": "+ isUser );
+        return isUser;
     }
 
     @GetMapping("/roles")

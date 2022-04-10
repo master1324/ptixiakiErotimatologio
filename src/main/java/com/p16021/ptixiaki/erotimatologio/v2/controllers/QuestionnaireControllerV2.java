@@ -44,8 +44,6 @@ public class QuestionnaireControllerV2 {
 
     }
 
-
-
     @GetMapping("/{id}")
     public ResponseEntity<AppResponse> getQuestionnaire(@PathVariable("id") int id, @RequestParam String filter){
 
@@ -78,6 +76,23 @@ public class QuestionnaireControllerV2 {
         }
     }
 
+    @GetMapping("/{id}/results")
+    public ResponseEntity<AppResponse> getQuestionnaireResults(@PathVariable long id, @RequestParam String filter){
+        try {
+            return ResponseEntity.ok(
+                    AppResponse.builder()
+                            .timeStamp(LocalDateTime.now())
+                            .data(Map.of("results" , questionnaireService.findResult(id,filter)))
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .build()
+            );
+        }catch (Exception e){
+            return error(404 ,null,null,null);
+        }
+
+    }
+
     @PostMapping("/add")
     public ResponseEntity<AppResponse> addQuestionnaire(@RequestBody Questionnaire questionnaire){
         try {
@@ -97,42 +112,11 @@ public class QuestionnaireControllerV2 {
     @PutMapping("/update/{id}")
     public ResponseEntity<AppResponse> updateQuestionnaire(@RequestBody Questionnaire questionnaire){
 
-//        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-//
-//        try{
-//            userService.updateUser(request,userId);
-//            return ResponseEntity.ok(
-//                    AppResponse.builder()
-//                            .timeStamp(LocalDateTime.now())
-//                            //.data(Map.of("teacher" , teacherService.updateTeacher(teacher)))
-//                            .status(CREATED)
-//                            .statusCode(CREATED.value())
-//                            .build()
-//            );
-//        }catch (RuntimeException e){
-//            return error(401 ,null,null,e.getMessage());
-//        }catch (Exception e){
-//            return error(404 ,null,null,null);
-//        }
         return error(501 ,"not implemented","not implemented",null);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<AppResponse> deleteUser(@PathVariable long id){
-
-//        try{
-//            teacherService.deleteTeacher(id);
-//            return ResponseEntity.ok(
-//                    AppResponse.builder()
-//                            .timeStamp(LocalDateTime.now())
-//                            //.data(Map.of("teacher" , teacherService.deleteTeacher(id)))
-//                            .status(OK)
-//                            .statusCode(OK.value())
-//                            .build()
-//            );
-//        }catch (Exception e){
-//            return error(401 ,null,null,null);
-//        }
+    public ResponseEntity<AppResponse> deleteQuestionnaire(@PathVariable long id){
 
         return error(501 ,"not implemented","not implemented",null);
 

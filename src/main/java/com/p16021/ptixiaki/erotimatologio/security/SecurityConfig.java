@@ -36,15 +36,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //http.cors();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.cors().and().authorizeRequests().antMatchers("/login/**","/signup/**","/refresh/**","/confirm/**").permitAll();
-        http.authorizeRequests().antMatchers("/response/**").hasAuthority("ROLE_USER");
-        http.authorizeRequests().antMatchers(PUT,"/quest/{qid}").hasAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers(POST,"/quest/add").hasAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers(DELETE,"/quest/{qid}").hasAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers(GET,"/quest/{qid}/results").hasAuthority("ROLE_ADMIN");
-
-        http.authorizeRequests().antMatchers(GET,"/roles","/is_user","/is_admin","/quest/{qid}","/quest/all","/identifiers/all")
-                .hasAnyAuthority("ROLE_USER","ROLE_ADMIN");
+        http.cors().and().authorizeRequests().antMatchers("/login/**","/signup/**","/refresh/**","/confirm/**","/v2/user/add").permitAll();
+        http.authorizeRequests().antMatchers("/response/**","/v2/response/**").hasAuthority("ROLE_USER");
+        http.authorizeRequests().antMatchers(POST,"/quest/add","/v2/quest/add").hasAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers("/teacher/**","/v2/teacher/**").hasAuthority("ROLE_ADMIN");
+//        http.authorizeRequests().antMatchers(PUT,"/quest/{qid}").hasAuthority("ROLE_ADMIN");
+//        http.authorizeRequests().antMatchers(DELETE,"/quest/{qid}").hasAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(GET,"/quest/{qid}/results","/v2/quest/{id}/results").hasAnyAuthority("ROLE_ADMIN","ROLE_TEACHER");
+        http.authorizeRequests().antMatchers("/filter/decode").hasAnyAuthority("ROLE_USER","ROLE_TEACHER","ROLE_ADMIN");
+        http.authorizeRequests().antMatchers("/filter/**","/v2/filter/**").hasAnyAuthority("ROLE_ADMIN","ROLE_TEACHER");
+        http.authorizeRequests().antMatchers(GET,"/roles","/is_user","/is_admin","/quest/{qid}","/v2/quest/{id}","/quest/all","/v2/quest/all","/identifiers/all","/v2/identifiers/all")
+                .hasAnyAuthority("ROLE_USER","ROLE_ADMIN","ROLE_TEACHER");
 
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter());

@@ -1,6 +1,8 @@
 package com.p16021.ptixiaki.erotimatologio.services;
 
+import ch.qos.logback.core.joran.conditional.IfAction;
 import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Identifier;
+import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Teacher;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Filter;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Question;
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.Year;
 import java.util.*;
 
+import static com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType.TEACHER;
 import static com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType.YEAR;
 
 @Service
@@ -100,9 +103,8 @@ public class FilterServiceImpl implements FilterService {
     public Iterable<Filter> getAllFilters(long userId) {
 
         boolean isTeacher = teacherRepo.existsByAppUserId(userId);
-
+        Iterable<Filter> filters = filterRepo.findAll();
         if(!isTeacher){
-            Iterable<Filter> filters = filterRepo.findAll();
             for (Filter f : filters) {
                 f.setDecodedFilter(decodeFilter(f.getFilter()));
 
@@ -110,9 +112,26 @@ public class FilterServiceImpl implements FilterService {
                 //f.setNumOfResponses(responseRepo.countByFilterAndQuestionIdIn(f.getFilter(), questions));
             }
             return filters;
-        }
+        }else {
 
-        return filterRepo.findAll();
+            Optional<Teacher> teacherOptional = teacherRepo.findByAppUserId(userId);
+            List<Filter> filters1 = new ArrayList<>();
+            if(teacherOptional.isEmpty()){
+                throw new RuntimeException("Error");
+            }
+
+            for(Filter f:filters){
+                Map<IdentifierType,String> decodedFilter = decodeFilter(f.getFilter());
+                boolean hasValue = decodedFilter.containsValue(teacherOptional.get().getName());
+
+                if(hasValue){
+                    f.setDecodedFilter(decodedFilter);
+                    filters1.add(f);
+                }
+
+            }
+            return filters1;
+        }
     }
 
     @Override

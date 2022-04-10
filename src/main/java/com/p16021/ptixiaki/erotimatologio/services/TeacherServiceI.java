@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.p16021.ptixiaki.erotimatologio.models.entities.user.Role.ROLE_TEACHER;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -63,7 +65,8 @@ public class TeacherServiceI implements TeacherService {
         userRepo.save(new AppUser(request.getUsername(),
                 passwordEncoder.encode("1"),
                 request.getEmail(),
-                true));
+                true,
+                ROLE_TEACHER));
 
         Optional<AppUser> optional = userRepo.findByEmail(request.getEmail());
 

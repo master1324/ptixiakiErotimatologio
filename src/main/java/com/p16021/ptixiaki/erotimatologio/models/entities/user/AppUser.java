@@ -51,11 +51,12 @@ public class AppUser implements UserDetails {
         this.enabled = enabled;
     }
 
-    public AppUser(String username, String password, String email, Boolean enabled) {
+    public AppUser(String username, String password, String email, Boolean enabled,Role role) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.enabled = enabled;
+        this.role =role;
     }
 
     public AppUser(String username, String password, String email) {

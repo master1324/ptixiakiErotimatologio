@@ -42,6 +42,7 @@ public class FilterControllerV2 {
                             .build()
             );
         }catch (Exception e){
+            log.error(e.getMessage());
             return error(401 ,null,null,null);
         }
 
