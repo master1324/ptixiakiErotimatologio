@@ -87,7 +87,7 @@ public class FilterControllerV2 {
         }
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/")
     public ResponseEntity<AppResponse> updateFilter(@RequestBody Filter filter){
 
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());

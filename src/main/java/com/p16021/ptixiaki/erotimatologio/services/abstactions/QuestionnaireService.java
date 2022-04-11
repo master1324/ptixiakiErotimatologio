@@ -9,6 +9,8 @@ import com.p16021.ptixiaki.erotimatologio.models.projections.result.Questionnair
 public interface  QuestionnaireService {
     Iterable<QuestionnaireView> findAll();
 
+    QuestionnaireBody findById(long id);
+
     QuestionnaireIdentifiers findById(long id,long userId);
 
     QuestionnaireBody findByIdWhereUser(long qid, long userId, String filter);
@@ -16,4 +18,8 @@ public interface  QuestionnaireService {
     QuestionnaireResult findResult(long id, String filter);
 
     void save(Questionnaire q);
+
+    void update(Questionnaire q);
+
+    void delete(long id);
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Identifier;
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
 import lombok.*;
+import org.eclipse.persistence.annotations.PrivateOwned;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -31,14 +32,23 @@ public class Questionnaire {
     @Enumerated
     private Set<IdentifierType> identifiers;
 
-    @OneToMany(mappedBy = "questionnaire",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "questionnaire",cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonManagedReference(value = "questionGroups")
+    @PrivateOwned
     private List<QuestionGroup> questionnaire;
 
     @Transient
     private int numOfResponses;
     @Transient
     private Map<IdentifierType,List<Identifier>> eligibleResponsesIdentifiers;
+
+    public Questionnaire(String name,String shortDescription, Set<IdentifierType> identifiers, List<QuestionGroup> questionnaire,boolean enabled) {
+        this.name = name;
+        this.shortDescription =shortDescription;
+        this.identifiers = identifiers;
+        this.questionnaire = questionnaire;
+        this.enabled = enabled;
+    }
 
     public Questionnaire(String name,String shortDescription, Set<IdentifierType> identifiers, List<QuestionGroup> questionnaire) {
         this.name = name;

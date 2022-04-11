@@ -58,7 +58,6 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //boolean isUser = authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals(role));
         boolean isUser = authentication.getAuthorities().stream().anyMatch(auth -> Arrays.stream(roles).anyMatch(role ->auth.getAuthority().equals(role)));
-        log.info("Is user " + Arrays.toString(roles) + ": "+ isUser );
         return isUser;
     }
 

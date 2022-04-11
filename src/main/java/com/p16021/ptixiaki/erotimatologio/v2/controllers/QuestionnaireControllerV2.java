@@ -60,6 +60,15 @@ public class QuestionnaireControllerV2 {
                                 .statusCode(OK.value())
                                 .build()
                 );
+            }else if( filter.equals("info")) {
+                return ResponseEntity.ok(
+                        AppResponse.builder()
+                                .timeStamp(LocalDateTime.now())
+                                .data(Map.of("questionnaire" , questionnaireService.findById(id)))
+                                .status(OK)
+                                .statusCode(OK.value())
+                                .build()
+                );
             }else {
                 return ResponseEntity.ok(
                         AppResponse.builder()
@@ -109,16 +118,44 @@ public class QuestionnaireControllerV2 {
         }
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/update")
     public ResponseEntity<AppResponse> updateQuestionnaire(@RequestBody Questionnaire questionnaire){
 
-        return error(501 ,"not implemented","not implemented",null);
+        try {
+            questionnaireService.update(questionnaire);
+            return ResponseEntity.ok(
+                    AppResponse.builder()
+                            .timeStamp(LocalDateTime.now())
+                            .status(CREATED)
+                            .statusCode(CREATED.value())
+                            .build()
+            );
+        }catch (Exception e){
+            log.error(e.toString());
+            return error(401 ,"tell","me","why");
+        }
+
+        //return error(501 ,"not implemented","not implemented",null);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<AppResponse> deleteQuestionnaire(@PathVariable long id){
 
-        return error(501 ,"not implemented","not implemented",null);
+        try {
+            questionnaireService.delete(id);
+            return ResponseEntity.ok(
+                    AppResponse.builder()
+                            .timeStamp(LocalDateTime.now())
+                            .status(OK)
+                            .statusCode(OK.value())
+                            .build()
+            );
+        }catch (Exception e){
+            log.error(e.toString());
+            return error(401 ,"tell","me","why");
+        }
+
+        //return error(501 ,"not implemented","not implemented",null);
 
     }
 

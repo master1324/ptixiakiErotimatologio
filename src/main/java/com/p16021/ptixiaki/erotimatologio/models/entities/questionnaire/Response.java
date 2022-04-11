@@ -28,14 +28,6 @@ public class Response {
     @JsonBackReference(value = "responses")
     private Question question;
 
-    @PrePersist
-    @PreUpdate
-    private void produceFilter(){
-//        Set<String> ids = new HashSet<>();
-//        identifiers.forEach(i->ids.add(String.valueOf(i.getId())));
-//
-//        setFilter(String.join("",ids));
-    }
 
     public Response(String response, String filter, Question question) {
         this.response = response;

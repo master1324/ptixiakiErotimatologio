@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType;
 import lombok.*;
+import org.eclipse.persistence.annotations.PrivateOwned;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -21,8 +22,9 @@ public class Question {
     @NotEmpty(message = "Question cant be empty")
     private String question;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question",cascade = CascadeType.ALL)
     @JsonManagedReference(value = "responses")
+    @PrivateOwned
     private List<Response> responses;
 
     @ManyToOne

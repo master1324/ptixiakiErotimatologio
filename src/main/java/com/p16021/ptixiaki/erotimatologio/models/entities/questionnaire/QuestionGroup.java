@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType;
 import lombok.*;
+import org.eclipse.persistence.annotations.PrivateOwned;
 
 import javax.persistence.*;
 import java.util.List;
@@ -24,8 +25,10 @@ public class QuestionGroup {
     @JsonBackReference(value = "questionGroups")
     private Questionnaire questionnaire;
 
-    @OneToMany(mappedBy = "questionGroup",cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "questionGroup",cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonManagedReference(value = "questions")
+    @PrivateOwned
     private List<Question> questions;
 
 

@@ -39,6 +39,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
+    public QuestionnaireBody findById(long id) {
+
+        return questionnaireRepo.findProjectedById(id,QuestionnaireBody.class);
+    }
+
+    @Override
     public QuestionnaireIdentifiers findById(long id,long userId){
 
         QuestionnaireIdentifiers questionnaire = questionnaireRepo.findProjectedById(id,QuestionnaireIdentifiers.class);
@@ -118,6 +124,16 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
         questionnaireRepo.save(q);
 
+    }
+
+    @Override
+    public void update(Questionnaire q) {
+        questionnaireRepo.save(q);
+    }
+
+    @Override
+    public void delete(long id) {
+        questionnaireRepo.deleteById(id);
     }
 
 
