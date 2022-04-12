@@ -8,6 +8,7 @@ import com.p16021.ptixiaki.erotimatologio.models.entities.user.UpdateProfileRequ
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.ResponseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.GenericJDBCException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -83,6 +84,8 @@ public class ResponseControllerV2 {
                             .statusCode(CREATED.value())
                             .build()
             );
+        }catch (RuntimeException runtimeException){
+            return error(401 ,null,null,runtimeException.getMessage());
         }catch (Exception e){
             log.error(e.getMessage());
             return error(401 ,null,null,e.getMessage());

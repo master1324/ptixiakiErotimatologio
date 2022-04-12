@@ -65,11 +65,11 @@ public class IdentifierServiceImpl implements IdentifierService {
 
         switch (responseType){
             case TRUE_FALSE:
-                eligibleResponses.add("NAI");
-                eligibleResponses.add("OXI");
+                eligibleResponses.add("Ναι");
+                eligibleResponses.add("Όχι");
                 break;
             case MULTI5:
-                eligibleResponses.addAll(Arrays.asList("KATHOLOU","LIGO","ARKETA","POLI","PARA POLI"));
+                eligibleResponses.addAll(Arrays.asList("Καθόλου","Λίγο","Αρκετά","Πολύ","Πάρα Πολύ"));
                 break;
         }
 

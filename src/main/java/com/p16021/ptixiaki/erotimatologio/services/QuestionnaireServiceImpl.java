@@ -3,6 +3,7 @@ package com.p16021.ptixiaki.erotimatologio.services;
 import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Identifier;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Questionnaire;
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
+import com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType;
 import com.p16021.ptixiaki.erotimatologio.models.projections.QuestGroupView;
 import com.p16021.ptixiaki.erotimatologio.models.projections.QuestionView;
 import com.p16021.ptixiaki.erotimatologio.models.projections.ResponseView;
@@ -22,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import static com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType.TEXT;
 
 @Service @RequiredArgsConstructor @Slf4j
 public class QuestionnaireServiceImpl implements QuestionnaireService {
@@ -109,6 +112,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
             for(QuestGroupResultView group: questionnaireResultView.getQuestionnaire()){
                 for(QuestionResultView question: group.getQuestions()){
                     String result = questionService.findQuestionResult(question.getId(),group.getResponseType(),filter);
+                    question.setResultMap(questionService.findResultMap(question.getId(),filter,group.getResponseType()));
+                    //TODO: to result tha ginete set mono gia text
                     question.setResult(result);
                 }
             }

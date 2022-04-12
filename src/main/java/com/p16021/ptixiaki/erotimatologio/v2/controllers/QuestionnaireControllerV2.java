@@ -97,6 +97,7 @@ public class QuestionnaireControllerV2 {
                             .build()
             );
         }catch (Exception e){
+            log.error(e.toString());
             return error(404 ,null,null,null);
         }
 

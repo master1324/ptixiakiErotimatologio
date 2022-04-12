@@ -13,6 +13,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -48,8 +49,8 @@ public class FilterControllerV2 {
 
     }
 
-    @GetMapping("/{filter}")
-    public ResponseEntity<AppResponse> getFilter(@PathVariable("filter") String filter){
+    @GetMapping("/{id}")
+    public ResponseEntity<AppResponse> getFilter(@PathVariable long id, @RequestParam String filter){
 
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
 
@@ -57,12 +58,13 @@ public class FilterControllerV2 {
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
-                            .data(Map.of("user" , filterService.getFilter(userId,filter)))
+                            .data(Map.of("filter" , filterService.getFilter(id,filter)))
                             .status(OK)
                             .statusCode(OK.value())
                             .build()
             );
         }catch (Exception e){
+            log.error(e.toString());
             return error(404 ,null,null,"not found sss");
         }
     }

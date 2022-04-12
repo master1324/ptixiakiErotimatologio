@@ -115,11 +115,19 @@ public class ResponseServiceImpl implements  ResponseService {
 //        }\
 
         Response rx = responses.iterator().next();
-        log.info(rx.toString());
         QuestionnaireView qv = questionnaireRepo.findQuestionnaireByQuestionId(rx.getQuestion().getId());
-        log.info(qv.toString());
+        if(rx.getId() ==0){
+            Optional<QuestionnaireResponse> questionnaireResponseOptional =
+                    questionnaireResponseRepo.findByFilterAndQuestionnaireIdAndUserId(rx.getFilter(),qv.getId(),userId);
+            if(questionnaireResponseOptional.isPresent()){
+                throw new RuntimeException("Παρακαλώ ανανεώστε την σελίδα για να μπορέσετε να αλλάξετε τις απαντήσεις σας");
+            }
+        }
+        //QuestionnaireView qv = questionnaireRepo.findQuestionnaireByQuestionId(rx.getQuestion().getId());
 
         responseValidator.responsesAreOk(responses,userId,qv.getId());
+
+
         responseRepo.saveAll(responses);
         saveQuestionnaireResponse(rx.getFilter(),userId,qv.getId(),qv.getName());
 

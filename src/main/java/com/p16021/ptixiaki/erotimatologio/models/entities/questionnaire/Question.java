@@ -9,6 +9,7 @@ import org.eclipse.persistence.annotations.PrivateOwned;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @NoArgsConstructor
@@ -41,6 +42,8 @@ public class Question {
     private String userResponse;
     @Transient
     private List<String> eligibleResponses;
+    @Transient
+    private Map<String,Integer> resultMap;
 
     public Question(Long id) {
         this.id = id;
