@@ -13,6 +13,7 @@ public interface QuestionnaireRepo extends CrudRepository<Questionnaire,Long> {
 
     boolean existsById(Long id);
     Iterable<QuestionnaireView> findProjectedBy();
+    Iterable<QuestionnaireView> findProjectedByEnabled(boolean enabled);
     <T> T findProjectedById(long id,Class<T> className);
     Iterable<QuestionnaireView> findByQuestionnaireQuestionsResponsesQuestionId(long id);
 

@@ -25,7 +25,7 @@ public class QuestionnaireResponse {
     private String name;
 
     @Transient
-    private Map<IdentifierType,String> decodedFilter;
+    private Map<String,String> decodedFilter;
 
     public QuestionnaireResponse(Long questionnaireId, Long userId, String filter,String name) {
         this.questionnaireId = questionnaireId;

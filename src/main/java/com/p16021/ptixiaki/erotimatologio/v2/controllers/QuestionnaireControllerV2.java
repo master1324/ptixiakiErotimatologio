@@ -10,11 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -29,11 +32,15 @@ public class QuestionnaireControllerV2 {
 
     @GetMapping("/all")
     public ResponseEntity<AppResponse> getQuestionnaires(){
+
+        Set<String> roles = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+
         try {
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
-                            .data(Map.of("questionnaires" , questionnaireService.findAll()))
+                            .data(Map.of("questionnaires" , questionnaireService.findAll(roles)))
                             .status(OK)
                             .statusCode(OK.value())
                             .build()

@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,6 +28,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/quest")
@@ -61,7 +64,10 @@ public class QuestionnaireController {
     @GetMapping("/all")
     public ResponseEntity<Iterable<QuestionnaireView>> getAll(){
 
-        Iterable<QuestionnaireView> questionnaireViews = questionnaireService.findAll();
+        Set<String> roles = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+
+        Iterable<QuestionnaireView> questionnaireViews = questionnaireService.findAll(roles);
 
         return ResponseEntity.ok().body(questionnaireViews);
     }

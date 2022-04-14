@@ -5,12 +5,15 @@ import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Identifier;
 import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Teacher;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Filter;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Question;
+import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Questionnaire;
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
+import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.QuestionnaireView;
 import com.p16021.ptixiaki.erotimatologio.repos.*;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.FilterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Year;
 import java.util.*;
@@ -28,7 +31,7 @@ public class FilterServiceImpl implements FilterService {
     private final TeacherRepo teacherRepo;
     private final QuestionnaireRepo questionnaireRepo;
     private final QuestionRepo questionRepo;
-    private final ResponseRepo responseRepo;
+
 
     @Override
     public boolean filterIsOk(String filter, Long qid){
@@ -52,13 +55,14 @@ public class FilterServiceImpl implements FilterService {
     }
 
     @Override
-    public Map<IdentifierType,String> decodeFilter(String filter){
-        Map<IdentifierType,String> decodedFilter = new HashMap<>();
+    public Map<String,String> decodeFilter(String filter){
+
+        Map<String,String> decodedFilter = new HashMap<>();
         List<String> items = Arrays.asList(filter.split("\\s*,\\s*"));
-        decodedFilter.put(YEAR,items.get(0));
+        decodedFilter.put(YEAR.name(),items.get(0));
         items.forEach( item ->{
             Optional<Identifier> identifier = identifierRepo.findById(Long.parseLong(item));
-            identifier.ifPresent(value -> decodedFilter.put(value.getType(), value.getName()));
+            identifier.ifPresent(value -> decodedFilter.put(value.getType().name(), value.getName()));
         });
 
         return decodedFilter;
@@ -83,6 +87,7 @@ public class FilterServiceImpl implements FilterService {
     }
 
     @Override
+    @Transactional
     public void updateFilter(Filter filter, long userId) {
         filter.setUserId(userId);
         filterRepo.save(filter);
@@ -121,7 +126,7 @@ public class FilterServiceImpl implements FilterService {
             }
 
             for(Filter f:filters){
-                Map<IdentifierType,String> decodedFilter = decodeFilter(f.getFilter());
+                Map<String,String> decodedFilter = decodeFilter(f.getFilter());
                 boolean hasValue = decodedFilter.containsValue(teacherOptional.get().getName());
 
                 if(hasValue){

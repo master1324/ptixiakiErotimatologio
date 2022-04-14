@@ -13,14 +13,14 @@ import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.Quest
 import com.p16021.ptixiaki.erotimatologio.models.projections.result.QuestGroupResultView;
 import com.p16021.ptixiaki.erotimatologio.models.projections.result.QuestionResultView;
 import com.p16021.ptixiaki.erotimatologio.models.projections.result.QuestionnaireResult;
+import com.p16021.ptixiaki.erotimatologio.repos.FilterRepo;
 import com.p16021.ptixiaki.erotimatologio.repos.QuestionnaireRepo;
-import com.p16021.ptixiaki.erotimatologio.services.abstactions.FilterService;
-import com.p16021.ptixiaki.erotimatologio.services.abstactions.IdentifierService;
-import com.p16021.ptixiaki.erotimatologio.services.abstactions.QuestionService;
-import com.p16021.ptixiaki.erotimatologio.services.abstactions.QuestionnaireService;
+import com.p16021.ptixiaki.erotimatologio.repos.QuestionnaireResponseRepo;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -30,15 +30,21 @@ import static com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType.TEXT;
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     private final QuestionnaireRepo questionnaireRepo;
-    private final FilterService filterService;
-    private final ResponseServiceImpl responseService;
+    private final FilterRepo filterRepo;
+    private final ResponseService responseService;
     private final QuestionService questionService;
     private final IdentifierService identifierService;
+    private final QuestionnaireResponseRepo questionnaireResponseRepo;
 
     @Override
-    public Iterable<QuestionnaireView> findAll(){
+    public Iterable<QuestionnaireView> findAll(Set<String> roles){
 
-        return questionnaireRepo.findProjectedBy();
+        if(roles.contains("ROLE_ADMIN")){
+            return questionnaireRepo.findProjectedBy();
+        }else{
+            return questionnaireRepo.findProjectedByEnabled(true);
+        }
+
     }
 
     @Override
@@ -126,19 +132,24 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Override
     public void save(Questionnaire q){
-
+        q.setEnabled(true);
         questionnaireRepo.save(q);
 
     }
 
     @Override
+    @Transactional
     public void update(Questionnaire q) {
         questionnaireRepo.save(q);
+        filterRepo.updateFilterWhereQuestionnaireId(q.getId(),q.getName());
     }
 
     @Override
+    @Transactional
     public void delete(long id) {
         questionnaireRepo.deleteById(id);
+        questionnaireResponseRepo.deleteByQuestionnaireId(id);
+        filterRepo.deleteByQuestionnaireId(id);
     }
 
 

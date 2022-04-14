@@ -79,6 +79,8 @@ public class UserController {
         }catch (IllegalStateException e){
             log.error(e.getMessage());
             message = e.getMessage();
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("Κάτι πήγε στραβά. Προσπαθήστε ξανά αργότερα");
         }
 
         return ResponseEntity.badRequest().body(message);
@@ -104,7 +106,7 @@ public class UserController {
                 response.setHeader("error",e.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 Map<String,String> errors = new HashMap<>();
-                errors.put("error_message xd", e.getMessage());
+                errors.put("error", e.getMessage());
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), errors);
             }

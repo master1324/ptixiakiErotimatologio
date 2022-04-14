@@ -11,4 +11,6 @@ public interface QuestionnaireResponseRepo extends CrudRepository<QuestionnaireR
     Optional<QuestionnaireResponse> findByFilterAndQuestionnaireIdAndUserId(String filter, long qid, long userId);
 
     Iterable<QuestionnaireResponse> findByUserId(long userId);
+
+    void deleteByQuestionnaireId(long id);
 }

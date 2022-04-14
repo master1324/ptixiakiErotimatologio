@@ -23,7 +23,7 @@ public class Filter {
     private boolean enabled = true;
     private String questionnaireName;
     @Transient
-    private Map<IdentifierType,String> decodedFilter;
+    private Map<String,String> decodedFilter;
     @Transient
     private long numOfResponses;
 

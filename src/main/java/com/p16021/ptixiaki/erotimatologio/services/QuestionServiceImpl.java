@@ -48,7 +48,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Map<String, Integer> findResultMap(long questionId, String filter, String responseType) {
 
-        Map<String,Integer> results = new HashMap<>();
+        Map<String,Integer> results = new LinkedHashMap<>();
         if(!responseType.equals("TEXT")){
             List<String> responseList = responseRepo.getResultMap(filter,questionId);
             List<String> eligibleResponses = identifierService.findEligibleResponses(ResponseType.valueOf(responseType));

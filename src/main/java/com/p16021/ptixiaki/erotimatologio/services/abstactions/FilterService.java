@@ -8,7 +8,7 @@ import java.util.Map;
 public interface FilterService {
     boolean filterIsOk(String filter, Long qid);
 
-    Map<IdentifierType, String> decodeFilter(String filter);
+    Map<String, String> decodeFilter(String filter);
 
     String produceFilter(String[] ids);
 

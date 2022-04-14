@@ -19,4 +19,10 @@ public interface FilterRepo extends CrudRepository<Filter,Long> {
     @Modifying
     @Query("update Filter f set f.enabled = false where f.activeFor < :date")
     void disableFilters(@Param("date") long date);
+
+    @Modifying
+    @Query("update Filter f set f.questionnaireName = :newName where f.questionnaireId = :qid")
+    void updateFilterWhereQuestionnaireId(long qid,String newName);
+
+    void deleteByQuestionnaireId(long id);
 }

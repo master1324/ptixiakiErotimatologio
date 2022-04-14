@@ -24,8 +24,8 @@ public class FilterController {
     private final FilterService filterService;
 
     @GetMapping("/decode")
-    public ResponseEntity<Map<IdentifierType,String>> decodeFilter(@RequestParam  String filter)  {
-            Map<IdentifierType,String> decodedFilter = filterService.decodeFilter(filter);
+    public ResponseEntity<Map<String,String>> decodeFilter(@RequestParam  String filter)  {
+            Map<String,String> decodedFilter = filterService.decodeFilter(filter);
             return ResponseEntity.ok().body(decodedFilter);
     }
 

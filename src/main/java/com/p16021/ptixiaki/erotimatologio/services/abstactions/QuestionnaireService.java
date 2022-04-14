@@ -6,8 +6,10 @@ import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.Quest
 import com.p16021.ptixiaki.erotimatologio.models.projections.questionnaire.QuestionnaireView;
 import com.p16021.ptixiaki.erotimatologio.models.projections.result.QuestionnaireResult;
 
+import java.util.Set;
+
 public interface  QuestionnaireService {
-    Iterable<QuestionnaireView> findAll();
+    Iterable<QuestionnaireView> findAll(Set<String> roles);
 
     QuestionnaireBody findById(long id);
 
