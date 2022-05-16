@@ -5,6 +5,8 @@ import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Polymorphism;
+import org.hibernate.annotations.PolymorphismType;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.*;

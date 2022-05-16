@@ -12,10 +12,10 @@ public interface QuestionView {
     String getQuestion();
     //ResponseType getResponseType();
     void setUserResponse(String response);
-    void setEligibleResponses(List<String> eligibleResponses);
+    //void setEligibleResponses(List<String> eligibleResponses);
     void setResponseId(Long id);
     Long getResponseId();
-    List<String> getEligibleResponses();
+   // List<String> getEligibleResponses();
     @Value("#{target.getUserResponse()}")
     String getUserResponse();
 }

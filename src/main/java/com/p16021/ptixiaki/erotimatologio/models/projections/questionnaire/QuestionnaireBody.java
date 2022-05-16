@@ -12,7 +12,7 @@ public interface QuestionnaireBody extends QuestionnaireView {
 
     long getId();
     String getName();
-    Set<IdentifierType> getIdentifiers();
+     Set<IdentifierType> getIdentifiers();
     boolean getEnabled();
     List<QuestGroupView> getQuestionnaire();
 

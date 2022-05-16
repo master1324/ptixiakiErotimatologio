@@ -132,7 +132,10 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Override
     public void save(Questionnaire q){
-        q.setEnabled(true);
+        //TODO: kane frontend na exei aki to enalbed
+        if(q.getEnabled() == null) {
+            q.setEnabled(true);
+        }
         questionnaireRepo.save(q);
 
     }

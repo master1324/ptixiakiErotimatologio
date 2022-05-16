@@ -10,7 +10,8 @@ import java.util.Map;
 public interface IdentifierService {
     Identifier findById(long id);
 
-    Map<IdentifierType, List<Identifier>> findAll();
+    List<Identifier> findAll();
+    Map<IdentifierType, List<Identifier>> findAllGrouped();
     Map<IdentifierType, List<Identifier>> findAllByUser(long userId);
 
     List<String> findEligibleResponses(ResponseType responseType);

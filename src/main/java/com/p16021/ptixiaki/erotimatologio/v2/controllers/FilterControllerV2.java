@@ -26,6 +26,7 @@ import static org.springframework.http.HttpStatus.OK;
 @Slf4j
 public class FilterControllerV2 {
 
+
     private final FilterService filterService;
 
     @GetMapping("/all")

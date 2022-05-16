@@ -55,13 +55,7 @@ public class QuestionServiceImpl implements QuestionService {
             eligibleResponses.forEach(value ->{
                 results.put(value,Collections.frequency(responseList,value));
             });
-        }else{
-            List<ResponseView> responses = responseRepo.findAllByQuestionIdAndFilter(questionId,filter);
-            List<String> responsesText = new ArrayList<>();
-            responses.forEach(r->responsesText.add(r.getResponse()));
-            results.put(String.join(",", responsesText),0);
         }
-
         return results;
     }
 

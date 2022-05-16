@@ -40,8 +40,8 @@ public class Question {
     private Long responseId;
     @Transient
     private String userResponse;
-    @Transient
-    private List<String> eligibleResponses;
+//    @Transient
+//    private List<String> eligibleResponses;
     @Transient
     private Map<String,Integer> resultMap;
 

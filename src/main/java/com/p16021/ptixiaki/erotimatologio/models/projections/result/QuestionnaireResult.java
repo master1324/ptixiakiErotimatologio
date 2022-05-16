@@ -6,6 +6,6 @@ public interface QuestionnaireResult {
 
     String getName();
     List<QuestGroupResultView> getQuestionnaire();
-    void setNumOfResponses(int numOfResponses);
-    int getNumOfResponses();
+    //void setNumOfResponses(int numOfResponses);
+    //int getNumOfResponses();
 }

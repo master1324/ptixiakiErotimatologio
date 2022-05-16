@@ -13,6 +13,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -46,7 +48,7 @@ public class QuestionnaireControllerV2 {
                             .build()
             );
         }catch (Exception e){
-            return error(401 ,null,null,null);
+            return error(404 ,null,null,"Δεν βρέθηκαν ερωτηματολόγια");
         }
 
     }

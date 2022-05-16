@@ -37,6 +37,7 @@ public class Questionnaire {
     @PrivateOwned
     private List<QuestionGroup> questionnaire;
 
+
     @Transient
     private int numOfResponses;
     @Transient

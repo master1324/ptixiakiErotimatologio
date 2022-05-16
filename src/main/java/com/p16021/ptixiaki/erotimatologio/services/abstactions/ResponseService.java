@@ -1,5 +1,6 @@
 package com.p16021.ptixiaki.erotimatologio.services.abstactions;
 
+import com.p16021.ptixiaki.erotimatologio.listeners.OnResponseSaved;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.QuestionnaireResponse;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Response;
 import com.p16021.ptixiaki.erotimatologio.models.projections.ResponseView;
@@ -16,7 +17,7 @@ public interface ResponseService {
 
     void save(Response response, Long userId);
 
-    void saveAll(Iterable<Response> responses, long userId);
+    void saveAll(Iterable<Response> responses, long userId, OnResponseSaved listener);
 
     void deleteById(long rid);
 }

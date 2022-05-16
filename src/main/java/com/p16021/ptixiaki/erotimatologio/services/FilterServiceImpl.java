@@ -78,7 +78,11 @@ public class FilterServiceImpl implements FilterService {
 
     @Override
     public void saveFilter(Filter filter, long userId) {
-        boolean filterExists = filterRepo.existsByFilterAndQuestionnaireId(filter.getFilter(),filter.getQuestionnaireId());
+        boolean filterExists =
+                filterRepo
+                        .existsByFilterAndQuestionnaireId(
+                                filter.getFilter(),
+                                filter.getQuestionnaireId());
         if(!filterExists){
             filter.setUserId(userId);
             filterRepo.save(filter);
@@ -92,7 +96,6 @@ public class FilterServiceImpl implements FilterService {
         filter.setUserId(userId);
         filterRepo.save(filter);
     }
-
 
     @Override
     public void setEnabled(String filter, boolean enabled) {

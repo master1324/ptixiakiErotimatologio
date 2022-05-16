@@ -5,6 +5,7 @@ import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Teacher;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.AppUser;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.RegistrationRequest;
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.TeacherRequest;
+import com.p16021.ptixiaki.erotimatologio.models.projections.TeacherProjectionNoUserId;
 import com.p16021.ptixiaki.erotimatologio.repos.TeacherRepo;
 import com.p16021.ptixiaki.erotimatologio.repos.UserRepo;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.TeacherService;
@@ -30,8 +31,8 @@ public class TeacherServiceI implements TeacherService {
     private final EmailSender emailSender;
 
     @Override
-    public Iterable<Teacher> getTeachers() {
-        return teacherRepo.findAll();
+    public Iterable<TeacherProjectionNoUserId> getTeachers() {
+        return teacherRepo.findProjectedBy();
     }
 
     @Override

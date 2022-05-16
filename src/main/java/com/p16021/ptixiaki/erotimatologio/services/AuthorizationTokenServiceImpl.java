@@ -25,13 +25,13 @@ public class AuthorizationTokenServiceImpl implements AuthorizationTokenService 
     public Map<String, String> generateTokens(User user, HttpServletRequest request) {
 
         Algorithm algorithm = loadSecret();
-        //log.info("user " + user.getUsername() + " authenticated" );
 
         String access_token = JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 15 * 60 *1000))
                 .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles",user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim("roles",user.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
 
         String refresh_token = JWT.create()
@@ -78,7 +78,6 @@ public class AuthorizationTokenServiceImpl implements AuthorizationTokenService 
 
         return verifier.verify(token);
     }
-
 
     private Algorithm loadSecret() {
         return Algorithm.HMAC256("xd".getBytes());

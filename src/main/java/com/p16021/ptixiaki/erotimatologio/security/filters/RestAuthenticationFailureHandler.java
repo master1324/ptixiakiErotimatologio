@@ -37,7 +37,6 @@ public class RestAuthenticationFailureHandler implements AuthenticationFailureHa
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-
         String username = request.getParameter("username");
         Optional<AppUser> user = userRepo.findByUsername(username);
         log.info(exception.toString());

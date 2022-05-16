@@ -82,13 +82,11 @@ public class UserController {
         }catch (Exception e){
             return ResponseEntity.internalServerError().body("Κάτι πήγε στραβά. Προσπαθήστε ξανά αργότερα");
         }
-
         return ResponseEntity.badRequest().body(message);
     }
 
     @GetMapping("/confirm")
     public String confirm(@RequestParam("token") String token){
-
         return registrationService.confirmToken(token);
     }
 

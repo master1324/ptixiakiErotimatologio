@@ -22,6 +22,7 @@ public class Filter {
     private long userId;
     private boolean enabled = true;
     private String questionnaireName;
+    
     @Transient
     private Map<String,String> decodedFilter;
     @Transient

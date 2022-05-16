@@ -4,6 +4,7 @@ import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Identifier;
 import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Teacher;
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
 import com.p16021.ptixiaki.erotimatologio.models.enums.ResponseType;
+import com.p16021.ptixiaki.erotimatologio.models.projections.TeacherProjection;
 import com.p16021.ptixiaki.erotimatologio.repos.IdentifierRepo;
 import com.p16021.ptixiaki.erotimatologio.repos.TeacherRepo;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.IdentifierService;
@@ -15,6 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType.EXAMINO;
+import static com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType.TEACHER;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +33,23 @@ public class IdentifierServiceImpl implements IdentifierService {
         return optional.get();
     }
 
+
     @Override
-    public Map<IdentifierType,List<Identifier>> findAll(){
+    public List<Identifier> findAll() {
+        List<Identifier> identifiers = (List<Identifier>) identifierRepo.findAll();
+
+        for(int j=0;j<identifiers.size();j++){
+            Identifier i = identifiers.get(j);
+            if(i.getType().equals(TEACHER))
+                identifiers.set(j,new Identifier(i.getId(),i.getName(),i.getType()));
+        }
+
+        return identifiers;
+    }
+
+
+    @Override
+    public Map<IdentifierType,List<Identifier>> findAllGrouped(){
 
         Map<IdentifierType,List<Identifier>> identifierMap = new HashMap<>();
         List<Identifier> identifiers = (List<Identifier>) identifierRepo.findAll();
@@ -95,10 +112,12 @@ public class IdentifierServiceImpl implements IdentifierService {
                 break;
             case TEACHER:
                 if(teacherOptional.isPresent()){
-                    identifiers.add(teacherOptional.get());
+                    Teacher t = teacherOptional.get();
+                    identifiers.add(new Identifier(t.getId(),t.getName(),t.getType()));
                     break;
                 }
-                identifiers.addAll(identifierRepo.findAllByType(IdentifierType.TEACHER));
+                List<TeacherProjection> teacherProjections = teacherRepo.findBy();
+                identifiers.addAll(setUpTeacher(teacherProjections));
                 break;
             case DEPARTMENT:
                 if(teacherOptional.isPresent()){
@@ -115,6 +134,12 @@ public class IdentifierServiceImpl implements IdentifierService {
                 break;
         }
         return identifiers;
+    }
+
+    private List<Identifier> setUpTeacher(List<TeacherProjection> projections){
+        List<Identifier> identifierList = new ArrayList<>();
+        projections.forEach(pro-> identifierList.add(new Identifier(pro.getId(),pro.getName(),pro.getType())));
+        return identifierList;
     }
 
 }

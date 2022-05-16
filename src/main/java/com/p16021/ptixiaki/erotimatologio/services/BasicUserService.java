@@ -44,7 +44,7 @@ public class BasicUserService implements UserService, UserDetailsService {
                 .orElseThrow(()-> new UsernameNotFoundException("username not found"));
 
         if(!user.isEnabled()){
-            throw new UsernameNotFoundException("xdddd");
+            throw new UsernameNotFoundException("user is not enabled");
         }
 
         /*Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -106,7 +106,8 @@ public class BasicUserService implements UserService, UserDetailsService {
                 request.getUsername(),
                 passwordEncoder.encode(request.getNewPassword()),
                 request.getEmail(),
-                true));
+                true,
+                appUserOptional.get().getRole()));
     }
 
     @Override

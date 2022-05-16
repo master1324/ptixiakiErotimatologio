@@ -48,13 +48,14 @@ public class TeacherControllerV2 {
     public ResponseEntity<AppResponse> getTeacher(@PathVariable("id") long id){
 
         try{
-            return ResponseEntity.ok(
-                    AppResponse.builder()
-                            .timeStamp(LocalDateTime.now())
-                            .data(Map.of("teacher" , teacherService.getTeacher(id)))
-                            .status(OK)
-                            .statusCode(OK.value())
-                            .build()
+            return
+            ResponseEntity.ok(
+             AppResponse.builder()
+              .timeStamp(LocalDateTime.now())
+              .data(Map.of("teacher" , teacherService.getTeacher(id)))
+              .status(OK)
+              .statusCode(OK.value())
+              .build()
             );
         }catch (Exception e){
             return error(401 ,null,null,null);

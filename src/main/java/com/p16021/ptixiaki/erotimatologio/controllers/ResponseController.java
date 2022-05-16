@@ -77,7 +77,7 @@ public class ResponseController {
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
 
         try {
-            responseService.saveAll(response,userId);
+            responseService.saveAll(response,userId,null);
         }catch (Exception e){
             throw new ResponseStatusException(HttpStatus.CONFLICT,e.getMessage());
         }

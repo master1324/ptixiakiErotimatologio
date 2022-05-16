@@ -2,6 +2,7 @@ package com.p16021.ptixiaki.erotimatologio.v2.controllers;
 
 import com.p16021.ptixiaki.erotimatologio.models.AppResponse;
 import com.p16021.ptixiaki.erotimatologio.repos.IdentifierRepo;
+import com.p16021.ptixiaki.erotimatologio.services.abstactions.IdentifierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ import static org.springframework.http.HttpStatus.OK;
 @Slf4j
 public class IdentifierControllerV2 {
 
-    private final IdentifierRepo identifierService;
+    private final IdentifierService identifierService;
 
     @GetMapping("/all")
     public ResponseEntity<AppResponse> getAll(){

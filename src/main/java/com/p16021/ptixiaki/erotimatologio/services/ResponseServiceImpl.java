@@ -1,6 +1,7 @@
 package com.p16021.ptixiaki.erotimatologio.services;
 
 
+import com.p16021.ptixiaki.erotimatologio.listeners.OnResponseSaved;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.QuestionnaireResponse;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Response;
 import com.p16021.ptixiaki.erotimatologio.models.projections.ResponseView;
@@ -13,6 +14,7 @@ import com.p16021.ptixiaki.erotimatologio.services.abstactions.FilterService;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.ResponseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,52 +69,7 @@ public class ResponseServiceImpl implements  ResponseService {
 
     @Override
     @Transactional
-    public void saveAll(Iterable<Response> responses, long userId){
-
-//        if(responses.iterator().hasNext()) {
-//            Response rx = responses.iterator().next();
-//            String filter = rx.getFilter();
-//
-//            log.info(String.valueOf(rx.getQuestion().getId()) + "XXXXXXXXXXXXXXXXXXXXXXXXX");
-//            QuestionnaireView qv = questionnaireRepo.findQuestionnaireByQuestionId(rx.getQuestion().getId());
-//            //long qid = responseRepo.findQuestionnaireByResponseId(rx.getId());
-//
-//
-//            if(qv.isPresent()){
-//                List<Long> questionIds = responseRepo.findQuestionsOfQuestionnaire(qv.get().getId());
-//                //AN TO FILTER DEN EXEI LIKSEI
-//                if (filterService.filterIsOk(filter,qv.get().getId())){
-//                    for (Response r : responses) {
-//                        //AN I EROTISI YPARXEI SE AUTO TO EPOTIMATOLOGIO
-//                        if(questionIds.stream().anyMatch(id-> r.getQuestion().getId().equals(id))){
-//                            if(r.getFilter().equals(filter)){
-//                                //AN I APANTISI EINAI APODEKTI BASI TON TIPO EROTISIS
-//                                if (!responseValidator.responseIsOk(r)){
-//                                    throw new RuntimeException("I apantisi " + r.getResponse() + " me id " + r.getId() + " den einai apodekti");
-//                                }
-//                                r.setUserId(userId);
-//                            }else {
-//                                throw new RuntimeException("MH APODEKTA FILTER");
-//                            }
-//                        }else{
-//                            throw new RuntimeException("I EROTISI DEN YPAXEI SE AUTO TO EROTIMATOLOGIO");
-//                        }
-//                        //AN KATHE APANTISEI EXEI TO IDIO FILTER
-//                    }
-//                }else{
-//                    throw new RuntimeException("TO EROTIMATOLOGIO DEN DEXETE PIA APANTISEIS");
-//                }
-//
-//                responseRepo.saveAll(responses);
-//
-//                saveQuestionnaireResponse(rx.getFilter(),userId,qv.get().getId(),qv.get().getName());
-//            }else{
-//                throw new RuntimeException("TO EROTIMATOLOGIO DEN YPARXEI");
-//            }
-//
-//        }else{
-//            throw new RuntimeException("Den uparxoun apantises");
-//        }\
+    public void saveAll(Iterable<Response> responses, long userId,@Nullable OnResponseSaved listener){
 
         Response rx = responses.iterator().next();
         QuestionnaireView qv = questionnaireRepo.findQuestionnaireByQuestionId(rx.getQuestion().getId());
@@ -127,9 +84,9 @@ public class ResponseServiceImpl implements  ResponseService {
 
         responseValidator.responsesAreOk(responses,userId,qv.getId());
 
-
         responseRepo.saveAll(responses);
         saveQuestionnaireResponse(rx.getFilter(),userId,qv.getId(),qv.getName());
+        listener.savedSuccessfully(rx.getFilter(),qv.getId());
 
     }
 

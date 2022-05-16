@@ -1,5 +1,6 @@
 package com.p16021.ptixiaki.erotimatologio.v2.controllers;
 
+import com.p16021.ptixiaki.erotimatologio.listeners.OnResponseSaved;
 import com.p16021.ptixiaki.erotimatologio.models.AppResponse;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.QuestionnaireResponse;
 import com.p16021.ptixiaki.erotimatologio.models.entities.questionnaire.Response;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -76,7 +78,12 @@ public class ResponseControllerV2 {
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
 
         try {
-            responseService.saveAll(responses,userId);
+            responseService.saveAll(responses, userId, new OnResponseSaved() {
+                @Override
+                public void savedSuccessfully(String filter, long questionnaireId) {
+
+                }
+            });
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
