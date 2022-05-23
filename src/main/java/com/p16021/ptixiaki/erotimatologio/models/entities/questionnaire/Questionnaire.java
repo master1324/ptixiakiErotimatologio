@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.p16021.ptixiaki.erotimatologio.models.entities.identifier.Identifier;
 import com.p16021.ptixiaki.erotimatologio.models.enums.IdentifierType;
 import lombok.*;
-import org.eclipse.persistence.annotations.PrivateOwned;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -34,7 +33,6 @@ public class Questionnaire {
 
     @OneToMany(mappedBy = "questionnaire",cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonManagedReference(value = "questionGroups")
-    @PrivateOwned
     private List<QuestionGroup> questionnaire;
 
 

@@ -90,7 +90,7 @@ public class QuestionnaireControllerV2 {
             }
 
         }catch (Exception e){
-            return error(404 ,null,null,"not found sss");
+            return error(404 ,null,null,"not found");
         }
     }
 

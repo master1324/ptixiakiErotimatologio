@@ -66,7 +66,7 @@ public class FilterControllerV2 {
             );
         }catch (Exception e){
             log.error(e.toString());
-            return error(404 ,null,null,"not found sss");
+            return error(404 ,null,null,"not found");
         }
     }
 
