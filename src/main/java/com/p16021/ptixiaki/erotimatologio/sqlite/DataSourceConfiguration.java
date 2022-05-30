@@ -6,12 +6,12 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 public class DataSourceConfiguration {
 	
 	
-	@Bean
-	public DataSource dataSource() {
+	//@Bean
+	public DataSource dataSourceSqlite() {
 	    final DriverManagerDataSource dataSource = new DriverManagerDataSource();
 	    dataSource.setDriverClassName("org.sqlite.JDBC");
 	    dataSource.setUrl("jdbc:sqlite:erotimatologio.db");
