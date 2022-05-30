@@ -6,6 +6,7 @@ import com.p16021.ptixiaki.erotimatologio.models.entities.user.ConfirmationToken
 import com.p16021.ptixiaki.erotimatologio.models.entities.user.RegistrationRequest;
 import com.p16021.ptixiaki.erotimatologio.services.abstactions.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class RegistrationService {
 
@@ -27,6 +29,7 @@ public class RegistrationService {
         boolean isValidEmail = emailValidator.test(request.getEmail());
 
         if(!isValidEmail){
+            log.error("EMAIL NOT VALID");
             throw new IllegalStateException("email not valid");
         }
 
