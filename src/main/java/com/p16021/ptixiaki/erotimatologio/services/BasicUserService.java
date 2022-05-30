@@ -58,7 +58,6 @@ public class BasicUserService implements UserService, UserDetailsService {
     public String register(AppUser user) {
 
         boolean userExists = userRepo.findByEmail(user.getEmail()).isPresent();
-        log.info( userRepo.findByEmail(user.getEmail()).toString());
         boolean usernameExists = userRepo.findByUsername(user.getUsername()).isPresent();
 
         if(userExists){
