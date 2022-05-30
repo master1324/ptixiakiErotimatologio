@@ -1,1 +1,0 @@
-web: java $JAVA_OPTS -jar -Dserver.port=$PORT erotimatologio.jar
