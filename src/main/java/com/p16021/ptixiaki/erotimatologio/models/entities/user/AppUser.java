@@ -17,6 +17,7 @@ import static java.util.Arrays.stream;
 @Entity @Getter
 @Setter
 @NoArgsConstructor @AllArgsConstructor @Slf4j
+@ToString
 //@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class AppUser implements UserDetails {
 
