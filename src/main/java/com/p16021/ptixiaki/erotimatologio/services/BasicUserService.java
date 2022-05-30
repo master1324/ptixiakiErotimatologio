@@ -92,7 +92,8 @@ public class BasicUserService implements UserService, UserDetailsService {
 
         Optional<AppUser> appUserOptional = userRepo.findById(userId);
 
-        if(appUserOptional.isEmpty()){
+
+        if(!appUserOptional.isPresent()){
             throw new RuntimeException("Sfalma");
         }
         boolean passwordsMatch = passwordEncoder.matches(request.getOldPassword(), appUserOptional.get().getPassword());

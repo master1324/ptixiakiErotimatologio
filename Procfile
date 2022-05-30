@@ -1,1 +1,1 @@
-web: java -Dspring.profiles.active=default -Dserver.port=$PORT -jar target/*.jar
+web: java $JAVA_OPTS -jar -Dserver.port=$PORT target/erotimatologio.jar

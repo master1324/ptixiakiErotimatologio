@@ -15,9 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -40,7 +40,7 @@ public class ResponseControllerV2 {
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
-                            .data(Map.of("qresponses" , responseService.findAllQuestResponsesByUser(userId)))
+                            .data(generateMap("qresponses" , responseService.findAllQuestResponsesByUser(userId)))
                             .status(OK)
                             .statusCode(OK.value())
                             .build()
@@ -139,5 +139,11 @@ public class ResponseControllerV2 {
 
         return new ResponseEntity<>(errorResponse,HttpStatus.valueOf(status));
 
+    }
+
+    private <K,V> HashMap<K,V> generateMap(K key, V value){
+        return new HashMap<K,V>(){{
+            put(key, value);
+        }};
     }
 }

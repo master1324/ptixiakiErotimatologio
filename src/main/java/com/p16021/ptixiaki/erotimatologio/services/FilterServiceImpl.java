@@ -124,7 +124,7 @@ public class FilterServiceImpl implements FilterService {
 
             Optional<Teacher> teacherOptional = teacherRepo.findByAppUserId(userId);
             List<Filter> filters1 = new ArrayList<>();
-            if(teacherOptional.isEmpty()){
+            if(!teacherOptional.isPresent()){
                 throw new RuntimeException("Error");
             }
 

@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -56,7 +57,7 @@ public class AppUserController {
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
-                            .data(Map.of("user" , userService.getUserById(userId)))
+                            .data(generateMap("user" , userService.getUserById(userId)))
                             .status(OK)
                             .statusCode(OK.value())
                             .build()
@@ -139,5 +140,11 @@ public class AppUserController {
 
         return new ResponseEntity<>(errorResponse,HttpStatus.valueOf(status));
 
+    }
+
+    private <K,V> HashMap<K,V> generateMap(K key, V value){
+        return new HashMap<K,V>(){{
+            put(key, value);
+        }};
     }
 }

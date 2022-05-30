@@ -61,7 +61,8 @@ public class AuthorizationTokenServiceImpl implements AuthorizationTokenService 
                 .withSubject(String.valueOf(user.getId()))
                 .withExpiresAt(new Date(System.currentTimeMillis() + 15 * 60 *1000))
                 .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", List.of(user.getRole().name()))
+                //.withClaim("roles", List.of(user.getRole().name()))
+                .withClaim("roles", Collections.singletonList(user.getRole().name()))
                 .sign(algorithm);
 
         Map<String,String> tokens = new HashMap<>();

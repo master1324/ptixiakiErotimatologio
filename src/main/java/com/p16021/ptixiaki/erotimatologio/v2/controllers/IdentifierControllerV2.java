@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -32,7 +33,7 @@ public class IdentifierControllerV2 {
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
-                            .data(Map.of("identifiers" , identifierService.findAll()))
+                            .data(generateMap("identifiers" , identifierService.findAll()))
                             .status(OK)
                             .statusCode(OK.value())
                             .build()
@@ -57,6 +58,12 @@ public class IdentifierControllerV2 {
 
         return new ResponseEntity<>(errorResponse,HttpStatus.valueOf(status));
 
+    }
+
+    private <K,V> HashMap<K,V> generateMap(K key, V value){
+        return new HashMap<K,V>(){{
+            put(key, value);
+        }};
     }
 
 }

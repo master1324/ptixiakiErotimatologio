@@ -13,10 +13,10 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,7 +42,7 @@ public class QuestionnaireControllerV2 {
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
-                            .data(Map.of("questionnaires" , questionnaireService.findAll(roles)))
+                            .data(generateMap("questionnaires" , questionnaireService.findAll(roles)))
                             .status(OK)
                             .statusCode(OK.value())
                             .build()
@@ -64,7 +64,7 @@ public class QuestionnaireControllerV2 {
                 return ResponseEntity.ok(
                         AppResponse.builder()
                                 .timeStamp(LocalDateTime.now())
-                                .data(Map.of("questionnaire" , questionnaireService.findById(id,userId)))
+                                .data(generateMap("questionnaire" , questionnaireService.findById(id,userId)))
                                 .status(OK)
                                 .statusCode(OK.value())
                                 .build()
@@ -73,7 +73,7 @@ public class QuestionnaireControllerV2 {
                 return ResponseEntity.ok(
                         AppResponse.builder()
                                 .timeStamp(LocalDateTime.now())
-                                .data(Map.of("questionnaire" , questionnaireService.findById(id)))
+                                .data(generateMap("questionnaire" , questionnaireService.findById(id)))
                                 .status(OK)
                                 .statusCode(OK.value())
                                 .build()
@@ -82,7 +82,7 @@ public class QuestionnaireControllerV2 {
                 return ResponseEntity.ok(
                         AppResponse.builder()
                                 .timeStamp(LocalDateTime.now())
-                                .data(Map.of("questionnaire" , questionnaireService.findByIdWhereUser(id,userId,filter)))
+                                .data(generateMap("questionnaire" , questionnaireService.findByIdWhereUser(id,userId,filter)))
                                 .status(OK)
                                 .statusCode(OK.value())
                                 .build()
@@ -100,7 +100,7 @@ public class QuestionnaireControllerV2 {
             return ResponseEntity.ok(
                     AppResponse.builder()
                             .timeStamp(LocalDateTime.now())
-                            .data(Map.of("results" , questionnaireService.findResult(id,filter)))
+                            .data(generateMap("results" , questionnaireService.findResult(id,filter)))
                             .status(OK)
                             .statusCode(OK.value())
                             .build()
@@ -182,5 +182,11 @@ public class QuestionnaireControllerV2 {
 
         return new ResponseEntity<>(errorResponse,HttpStatus.valueOf(status));
 
+    }
+
+    private <K,V> HashMap<K,V> generateMap(K key, V value){
+        return new HashMap<K,V>(){{
+            put(key, value);
+        }};
     }
 }

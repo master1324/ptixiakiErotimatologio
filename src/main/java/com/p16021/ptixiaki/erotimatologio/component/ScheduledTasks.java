@@ -8,15 +8,15 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 
-@Component
+//@Component
 @Slf4j
 @RequiredArgsConstructor
 public class ScheduledTasks {
 
     private final FilterRepo filterRepo;
 
-    @Scheduled(fixedRate = 30000)
-    @Transactional
+    //@Scheduled(fixedRate = 30000)
+    //@Transactional
     public void reportCurrentTime() {
         //log.info("Checking active filters");
         filterRepo.disableFilters(System.currentTimeMillis());
