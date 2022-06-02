@@ -59,8 +59,12 @@ public class TeacherServiceI implements TeacherService {
         log.info(request.toString());
 
         boolean userExists = userRepo.findByEmail(request.getEmail()).isPresent();
+        boolean usernameExists = userRepo.findByUsername(request.getUsername()).isPresent();
         if(userExists){
             throw new IllegalStateException("email taken");
+        }
+        if(usernameExists){
+            throw new IllegalStateException("username taken");
         }
 
         userRepo.save(new AppUser(request.getUsername(),
